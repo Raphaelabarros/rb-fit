@@ -197,6 +197,17 @@ nav.tabs button[aria-current="page"] svg{filter:drop-shadow(0 0 6px rgba(255,46,
 .cal .day.hoje .dn{box-shadow:inset 0 0 0 2px var(--green),0 0 12px rgba(255,46,154,.55)}
 .fprog{height:6px;border-radius:3px;background:var(--card2);overflow:hidden;margin-top:10px}
 .fprog i{display:block;height:100%;background:var(--green);border-radius:3px;box-shadow:0 0 10px rgba(255,46,154,.8)}
+.wkdatas{display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin-top:14px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.035)}
+.wkdatas .grow{flex:1;min-width:0}
+.wkdatas .d1{display:block;font-size:15px;font-weight:500}
+.wkdatas .d2{display:block;font-size:13px;color:var(--muted);margin-top:1px}
+.wkdatas.venc .d2{color:var(--gold)}
+.wkdatas.vazio{color:var(--muted);font-size:14px}
+.item.sel{box-shadow:inset 0 0 0 2px var(--green)}
+.item .ck2{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--card2);color:var(--green-ink);font-weight:700;flex:none}
+.item.sel .ck2{background:var(--green)}
+.clock.retro{font-size:16px;white-space:nowrap}
+.retrobar{background:color-mix(in srgb,var(--gold) 14%,var(--card));border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);color:#F4E2B0;border-radius:14px;padding:10px 14px;margin:-6px 0 12px;font-size:14px}
 .fdatas{display:flex;align-items:center;gap:10px;margin-top:12px;background:var(--card);border-radius:18px;padding:14px 16px;width:100%;text-align:left}
 .fdatas .grow{flex:1;min-width:0}
 .fdatas .t1{font-size:16px;font-weight:500}
@@ -775,6 +786,10 @@ function normApp(){
   for(const f of app.fichas) if(!app.pastas.some(p=>p.id===f.pastaId)) f.pastaId = app.pastas[0].id;
   app.custom = app.custom || [];
   app.tiposAtiv = app.tiposAtiv || [];
+  for(const p of app.pastas) if(p.inicio || p.fim){
+    for(const f of app.fichas) if(f.pastaId===p.id && !f.inicio && !f.fim){ f.inicio = p.inicio||""; f.fim = p.fim||""; }
+    delete p.inicio; delete p.fim;
+  }
   if(!app.pastas.some(p=>p.id===ui.pasta)) ui.pasta = app.pastas[0].id;
 }
 
@@ -1009,14 +1024,8 @@ function telaPlano(){
   <div class="sec cap">Fichas de treino</div>
   <div class="chips">${app.pastas.map(p=>`<button class="chip" data-action="pasta" data-id="${p.id}" aria-pressed="${p.id===ui.pasta}">${esc(p.nome)}${p.id===ui.pasta?' <span aria-label="Opções da ficha">•••</span>':""}</button>`).join("")}
     <button class="chip" data-action="nova-pasta">Criar ficha <span style="font-size:20px">+</span></button></div>
-  ${!ui.pastaMenu && pasta ? infoFicha(pasta) : ""}
   ${ui.pastaMenu && pasta ? `<div class="card" style="margin-top:12px">
       <div class="field" style="background:var(--field)"><label for="pasta-nome">Nome da ficha de treino</label><input id="pasta-nome" value="${esc(pasta.nome)}"></div>
-      <div class="grid2" style="margin-top:10px">
-        <div class="mini"><label for="pasta-ini">Início</label><input id="pasta-ini" type="date" value="${esc(pasta.inicio||"")}"></div>
-        <div class="mini"><label for="pasta-fim">Término</label><input id="pasta-fim" type="date" value="${esc(pasta.fim||"")}"></div>
-      </div>
-      <div class="chips" style="margin-top:10px;flex-wrap:wrap;overflow:visible">${[4,6,8,12].map(s=>`<button class="chip sm g" data-action="pasta-semanas" data-s="${s}">${s} semanas</button>`).join("")}</div>
       <button class="btn green" data-action="salvar-pasta">Salvar</button>
       ${app.pastas.length>1?`<button class="btn danger" data-action="excluir-pasta">${ui.armed==="pasta"?"Toque de novo para excluir":"Excluir ficha de treino"}</button>`:""}
     </div>` : ""}
@@ -1024,10 +1033,32 @@ function telaPlano(){
       <button class="h" style="width:100%;text-align:left" data-action="editar" data-id="${f.id}">
         <div><div class="n">${esc(f.nome)}</div><div class="muted" style="margin-top:4px">${[`${f.exercicios.length} exercícios`, ultDur[f.id]?`${ultDur[f.id]}min`:""].filter(Boolean).join(" • ")}</div></div>
         <span class="dots" aria-label="Editar treino">•••</span></button>
+      ${datasTreino(f)}
       <div class="foot"><div class="tiles">${tilesGrupos([...new Set(f.exercicios.map(e=>e.grupo))])}</div>
       <button class="go" data-action="iniciar" data-id="${f.id}" ${sessao?"disabled":""}>Iniciar</button></div></div>`).join("")}
   <button class="btn" data-action="novo-treino"><span style="font-family:var(--body);font-weight:400;font-size:26px">+</span> Adicionar treino</button>
   <button class="btn" data-action="nova-ativ">🎾 Registrar atividade</button>`;
+}
+function calcDatas(o){
+  const fdt = k => dt(k).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+  if(!o.inicio && !o.fim) return null;
+  const hoje = dt(diaKey(new Date())), dia = 864e5;
+  let t2 = "", prog = null, venc = false;
+  if(o.inicio && o.fim){
+    const ini = dt(o.inicio), fim = dt(o.fim), tot = Math.max(1, Math.round((fim-ini)/dia)+1), passados = Math.round((hoje-ini)/dia)+1;
+    const semTot = Math.max(1, Math.ceil(tot/7)), semAt = Math.min(semTot, Math.max(1, Math.ceil(passados/7)));
+    if(hoje < ini){ const f = Math.round((ini-hoje)/dia); t2 = `Começa em ${f} dia${f>1?"s":""}`; prog = 0; }
+    else if(hoje > fim){ const v = Math.round((hoje-fim)/dia); t2 = `Terminou há ${v} dia${v>1?"s":""} — hora de trocar`; prog = 1; venc = true; }
+    else { const falta = Math.round((fim-hoje)/dia); t2 = `Semana ${semAt} de ${semTot} • ${falta===0?"último dia":`faltam ${falta} dia${falta>1?"s":""}`}`; prog = passados/tot; }
+  } else if(o.inicio){ const d = Math.round((hoje-dt(o.inicio))/dia)+1; t2 = d>0 ? `Em uso há ${d} dia${d>1?"s":""}` : "Sem data de término"; }
+  else t2 = "Sem data de início";
+  return {t1:`${o.inicio?fdt(o.inicio):"—"} → ${o.fim?fdt(o.fim):"sem término"}`, t2, prog, venc};
+}
+function datasTreino(f){
+  const c = calcDatas(f);
+  if(!c) return `<button class="wkdatas vazio" data-action="editar" data-id="${f.id}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.9" aria-hidden="true" style="flex:none;filter:drop-shadow(0 0 5px rgba(255,46,154,.6))"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Definir início e término do treino</span></button>`;
+  return `<button class="wkdatas${c.venc?" venc":""}" data-action="editar" data-id="${f.id}" aria-label="Datas do treino: ${esc(c.t1)}, ${esc(c.t2)}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.9" aria-hidden="true" style="flex:none;filter:drop-shadow(0 0 5px rgba(255,46,154,.6))"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span class="grow"><span class="d1">${esc(c.t1)}</span><span class="d2">${esc(c.t2)}</span>
+    ${c.prog!=null?`<span class="fprog" style="display:block;margin-top:8px"><i style="width:${Math.round(Math.min(1,Math.max(0,c.prog))*100)}%"></i></span>`:""}</span></button>`;
 }
 function infoFicha(p){
   const fdt = k => dt(k).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
@@ -1108,7 +1139,8 @@ function telaCalendario(){
   const detalhe = selNoMes ? (()=>{ const itens = doDia(ui.calDia);
       return `<div class="sec cap">${esc(nomeDia(ui.calDia))}</div>
       ${itens.length ? itens.map(x=>x.k==="s"?cardSessaoCurto(x.o):cardAtivCurto(x.o)).join("") : `<p class="muted" style="margin:0 2px">Nada registrado neste dia.</p>`}
-      <button class="btn" data-action="nova-ativ" data-dia="${ui.calDia}"><span style="font-family:var(--body);font-weight:400;font-size:26px">+</span> Registrar atividade</button>`; })()
+      <button class="btn" data-action="retro" data-dia="${ui.calDia}">🏋️ Registrar treino</button>
+      <button class="btn" data-action="nova-ativ" data-dia="${ui.calDia}">🎾 Registrar atividade</button>`; })()
     : `<p class="muted small" style="margin:14px 4px 0">Toque num dia para ver o que você fez.</p>`;
   return `<div class="cal"><div class="wd">${["D","S","T","Q","Q","S","S"].map(x=>`<span>${x}</span>`).join("")}</div><div class="grid">${cel}</div></div>
     <div class="legend">${legenda}</div>${detalhe}`;
@@ -1210,6 +1242,11 @@ function scrEditor(){
   return `<div class="topbar"><button class="round" data-action="fechar-editor" aria-label="Voltar">${I.back}</button><div class="t">${esc(pasta?pasta.nome:"Treino")}</div><button class="save" data-action="salvar-treino">Salvar</button></div>
   <div class="field"><label for="ed-nome">Nome do treino</label><input id="ed-nome" data-bind="ed-nome" value="${esc(d.nome)}" placeholder="Treino A"></div>
   ${app.pastas.length>1?`<div class="field" style="margin-top:10px"><label for="ed-pasta">Ficha de treino</label><select id="ed-pasta" data-action="ed-pasta">${app.pastas.map(p=>`<option value="${p.id}" ${p.id===d.pastaId?"selected":""}>${esc(p.nome)}</option>`).join("")}</select></div>`:""}
+  <div class="grid2" style="margin-top:10px">
+    <div class="mini"><label for="ed-ini">Início do treino</label><input id="ed-ini" type="date" data-edd="inicio" value="${esc(d.inicio||"")}"></div>
+    <div class="mini"><label for="ed-fim">Término</label><input id="ed-fim" type="date" data-edd="fim" value="${esc(d.fim||"")}"></div>
+  </div>
+  <div class="chips" style="margin-top:10px;flex-wrap:wrap;overflow:visible">${[4,6,8,12].map(s=>`<button class="chip sm g" data-action="ed-semanas" data-s="${s}">${s} semanas</button>`).join("")}</div>
   <div class="sec cap">Exercícios <button class="link" data-action="abrir-picker" data-modo="editor">Adicionar exercício <span style="font-size:24px">+</span></button></div>
   ${d.exercicios.length ? d.exercicios.map((e,i)=>{
     const aberto = ui.ed.aberto===i, menu = ui.ed.menu===i;
@@ -1237,6 +1274,7 @@ function scrPicker(){
 
 function relogio(){
   if(!sessao) return "";
+  if(sessao.retro) return `${dataCurta(sessao.inicio)} • ${hora(sessao.inicio)} • ${fmtDur(sessao.retroDur)}`;
   const t=Math.floor((Date.now()-dt(sessao.inicio).getTime())/1000), h=Math.floor(t/3600), m=Math.floor(t%3600/60), s=t%60;
   return (h?h+":":"")+String(m).padStart(h?2:1,"0")+":"+String(s).padStart(2,"0");
 }
@@ -1244,7 +1282,8 @@ const exFeito = it => it.series.length>0 && it.series.every(x=>x.feito);
 function scrSessao(){
   const s = sessao;
   return `<div class="topbar"><button class="round" data-action="minimizar" aria-label="Voltar ao plano">${I.back}</button>
-    <div class="t">${esc(s.fichaNome)}<div class="clock" id="clock">${relogio()}</div></div><button class="save" data-action="finalizar">Finalizar</button></div>
+    <div class="t">${esc(s.fichaNome)}<div class="clock${s.retro?" retro":""}" id="clock">${relogio()}</div></div><button class="save" data-action="finalizar">Finalizar</button></div>
+  ${s.retro?`<div class="retrobar">Treino passado: confira os sets e toque em <b>Finalizar</b>.</div>`:""}
   <div class="mini locbar"><label for="s-local">📍 Local</label><input id="s-local" data-sloc="1" list="dl-locais" value="${esc(s.local||"")}" placeholder="Onde você está treinando?" autocomplete="off" enterkeyhint="done"></div>${dlLocais()}
   ${(()=>{ const tot=s.itens.length, ok=s.itens.filter(exFeito).length, algumAberto=s.itens.some(i=>!i.recolhido);
     return `<div class="sessbar"><span class="muted">${ok} de ${tot} exercícios concluídos</span><button class="linkbtn" data-action="recolher-todos">${algumAberto?"Recolher todos":"Expandir todos"}</button></div>`; })()}
@@ -1614,6 +1653,28 @@ function scrAtivResumo(){
   <button class="btn" data-action="editar-ativ" data-id="${a.id}">Editar atividade</button>
   <button class="btn" data-action="fechar-ativresumo">Ver no calendário</button>`;
 }
+function scrRetro(){
+  const r = ui.rt, recs = locaisRecentes("musc");
+  const fichasOrd = app.pastas.flatMap(p=>app.fichas.filter(f=>f.pastaId===p.id).map(f=>({f, p})));
+  return `<div class="topbar"><button class="round" data-action="fechar-retro" aria-label="Voltar">${I.back}</button><div class="t">Registrar treino</div><span style="width:52px"></span></div>
+  <p class="muted" style="margin:0 2px 6px">Para um treino que você fez e não registrou na hora.</p>
+  <div class="sec cap">Qual treino</div>
+  ${fichasOrd.length ? fichasOrd.map(({f,p})=>`<button class="item${r.fichaId===f.id?" sel":""}" data-action="rt-ficha" data-id="${f.id}" aria-pressed="${r.fichaId===f.id}">
+      <span class="ic" style="background:color-mix(in srgb,${COR_MUSC} 18%,var(--card2))">🏋️</span><span class="grow"><span class="t1">${esc(f.nome)}</span><span class="t2">${esc(p.nome)} • ${f.exercicios.length} exercícios</span></span>
+      <span class="ck2">${r.fichaId===f.id?"✓":""}</span></button>`).join("") : `<p class="muted">Crie um treino no Meu plano primeiro.</p>`}
+  <div class="grid2" style="margin-top:18px">
+    <div class="mini"><label for="rt-dia">Data</label><input id="rt-dia" type="date" data-rt="dia" value="${esc(r.dia)}"></div>
+    <div class="mini"><label for="rt-hora">Início</label><input id="rt-hora" type="time" data-rt="hora" value="${esc(r.hora)}"></div>
+  </div>
+  <div class="sec cap">Duração</div>
+  <div class="chips" style="flex-wrap:wrap;overflow:visible">${[45,60,75,90,120].map(m=>`<button class="chip sm g" data-action="rt-dur" data-v="${m}" aria-pressed="${+r.dur===m}">${fmtDur(m)}</button>`).join("")}</div>
+  <div class="mini" style="margin-top:10px"><label for="rt-durn">Ou digite os minutos</label><input id="rt-durn" inputmode="numeric" data-rt="dur" value="${esc(r.dur)}"></div>
+  <div class="sec cap">Local</div>
+  <div class="mini"><label for="rt-local">Onde foi</label><input id="rt-local" data-rt="local" value="${esc(r.local||"")}" placeholder="Ex.: academia" autocomplete="off"></div>
+  ${recs.length?`<div class="chips" style="margin-top:10px;flex-wrap:wrap;overflow:visible">${recs.map(l=>`<button class="chip sm g" data-action="rt-local" data-v="${esc(l)}" aria-pressed="${(r.local||"").trim()===l}">📍 ${esc(l)}</button>`).join("")}</div>`:""}
+  <button class="btn green" data-action="rt-continuar">Continuar para os exercícios</button>
+  <p class="muted small" style="margin:10px 2px 0">Os exercícios já vêm marcados como feitos, com as cargas do treino. É só ajustar o que foi diferente e finalizar.</p>`;
+}
 function abrirAtiv(a, dia){
   if(a){ const d = dt(a.data); ui.at = {id:a.id, tipo:a.tipo, dia:diaKey(d), hora:`${p2(d.getHours())}:${p2(d.getMinutes())}`, dur:String(a.dur||""), intens:a.intens||"", nota:a.nota||"", local:a.local||""}; }
   else {
@@ -1635,7 +1696,7 @@ function irParaDia(key){ prepDia(key); ui.screen = null; render(); window.scroll
 /* ---------- Render ---------- */
 function render(){
   const sc = ui.screen;
-  const html = sc==="ativResumo"?scrAtivResumo() : sc==="ativ"&&ui.at?scrAtividade() : sc==="github"?scrGithub() : sc==="editor"?scrEditor() : sc==="picker"?scrPicker() : sc==="sessao"&&sessao?scrSessao() : sc==="resumo"?scrResumo()
+  const html = sc==="retro"&&ui.rt?scrRetro() : sc==="ativResumo"?scrAtivResumo() : sc==="ativ"&&ui.at?scrAtividade() : sc==="github"?scrGithub() : sc==="editor"?scrEditor() : sc==="picker"?scrPicker() : sc==="sessao"&&sessao?scrSessao() : sc==="resumo"?scrResumo()
     : sc==="exercicio"?scrExercicio() : sc==="medidas"?scrMedidas()
     : ui.tab==="treinos"?telaTreinos() : ui.tab==="progresso"?telaProgresso() : ui.tab==="exercicios"?telaExercicios() : ui.tab==="perfil"?telaPerfil() : telaPlano();
   if(html===undefined) return;
@@ -1662,7 +1723,7 @@ function iniciar(f){
   saveDraft(); tela("sessao");
 }
 async function finalizar(){
-  const agora = new Date().toISOString();
+  const agora = sessao.retro ? new Date(dt(sessao.inicio).getTime() + (+sessao.retroDur||60)*60000).toISOString() : new Date().toISOString();
   let rec = 0;
   const itens = sessao.itens.map(it=>{
     const series = it.series.filter(x=>x.feito).map(x=>({kg:x.kg, reps:x.reps}));
@@ -1674,12 +1735,14 @@ async function finalizar(){
   }).filter(Boolean);
   if(!itens.length){ toast("Marque ao menos um set como feito."); return; }
   const reg = {id:sessao.id, fichaId:sessao.fichaId, fichaNome:sessao.fichaNome, local:(sessao.local||"").trim(), data:sessao.inicio, fim:agora, itens, recordes:rec};
+  const eraRetro = !!sessao.retro;
   sessoes.push(reg); sessao=null; saveDraft();
-  ui.resumoId = reg.id; ui.novo = true; tela("resumo");
+  if(eraRetro) prepDia(diaKey(reg.data));
+  ui.resumoId = reg.id; ui.novo = true; ui.novoRetro = eraRetro; tela("resumo");
   await salvarSessao(reg);
 }
 function abrirEditor(f){
-  ui.ed = {id: f?f.id:null, draft: f?clone(f):{id:null, nome:"", pastaId:ui.pasta, exercicios:[]}, aberto: null, menu: null};
+  ui.ed = {id: f?f.id:null, draft: f?clone(f):{id:null, nome:"", pastaId:ui.pasta, inicio:diaKey(new Date()), fim:"", exercicios:[]}, aberto: null, menu: null};
   tela("editor");
 }
 function adicionarEx(nome){
@@ -1713,11 +1776,9 @@ document.addEventListener("click", async e=>{
   const a = el.dataset.action, d = el.dataset;
   switch(a){
     case "pasta": if(ui.pasta===d.id) ui.pastaMenu=!ui.pastaMenu; else { ui.pasta=d.id; ui.pastaMenu=false; } ui.armed=null; render(); break;
-    case "nova-pasta": { const p={id:uid(), nome:`Ficha ${app.pastas.length+1}`, inicio:diaKey(new Date()), fim:""}; app.pastas.push(p); ui.pasta=p.id; ui.pastaMenu=true; render(); document.getElementById("pasta-nome")?.select(); await salvarApp(); break; }
+    case "nova-pasta": { const p={id:uid(), nome:`Ficha ${app.pastas.length+1}`}; app.pastas.push(p); ui.pasta=p.id; ui.pastaMenu=true; render(); document.getElementById("pasta-nome")?.select(); await salvarApp(); break; }
     case "salvar-pasta": { const ps=app.pastas.find(p=>p.id===ui.pasta), v=document.getElementById("pasta-nome").value.trim();
-      const ini=document.getElementById("pasta-ini").value, fim=document.getElementById("pasta-fim").value;
-      if(ini && fim && fim<ini){ toast("O término precisa ser depois do início."); return; }
-      if(v) ps.nome=v; ps.inicio=ini||""; ps.fim=fim||""; ui.pastaMenu=false; render(); toast("Ficha salva"); await salvarApp(); break; }
+      if(v) ps.nome=v; ui.pastaMenu=false; render(); toast("Ficha salva"); await salvarApp(); break; }
     case "pasta-semanas": { const ie=document.getElementById("pasta-ini"), fe=document.getElementById("pasta-fim"); if(!ie.value) ie.value=diaKey(new Date());
       const f=dt(ie.value); f.setDate(f.getDate()+(+d.s)*7-1); fe.value=diaKey(f); break; }
     case "excluir-pasta": { if(!armar("pasta")) return; const outra=app.pastas.find(p=>p.id!==ui.pasta);
@@ -1734,8 +1795,10 @@ document.addEventListener("click", async e=>{
     case "rm-ex": ui.ed.draft.exercicios.splice(+d.i,1); ui.ed.menu=null; ui.ed.aberto=null; render(); break;
     case "add-set": { const s=ui.ed.draft.exercicios[+d.i].series; const p=s[s.length-1]; s.push({reps:p?p.reps:"",kg:p?p.kg:""}); render(); break; }
     case "rm-set": ui.ed.draft.exercicios[+d.i].series.splice(+d.j,1); render(); break;
+    case "ed-semanas": { const dr=ui.ed.draft; if(!dr.inicio) dr.inicio=diaKey(new Date()); const x=dt(dr.inicio); x.setDate(x.getDate()+(+d.s)*7-1); dr.fim=diaKey(x); render(); break; }
     case "salvar-treino": { const dr=ui.ed.draft; dr.nome=dr.nome.trim();
-      if(!dr.nome){ toast("Dê um nome ao treino."); return; } if(!dr.exercicios.length){ toast("Adicione pelo menos um exercício."); return; }
+      if(!dr.nome){ toast("Dê um nome ao treino."); return; }
+      if(dr.inicio && dr.fim && dr.fim<dr.inicio){ toast("O término precisa ser depois do início."); return; } if(!dr.exercicios.length){ toast("Adicione pelo menos um exercício."); return; }
       dr.exercicios.forEach(x=>{ x.series = x.series.length ? x.series : [{reps:"",kg:""}]; });
       if(ui.ed.id){ const i=app.fichas.findIndex(f=>f.id===ui.ed.id); app.fichas[i]=dr; } else { dr.id=uid(); app.fichas.push(dr); }
       ui.pasta = dr.pastaId; ui.screen=null; ui.tab="plano"; render(); toast("Treino salvo"); await salvarApp(); break; }
@@ -1794,6 +1857,23 @@ document.addEventListener("click", async e=>{
     case "descartar": if(!armar("descartar")) return; sessao=null; saveDraft(); ui.screen=null; ui.tab="plano"; render(); toast("Treino descartado"); break;
     case "ver-ativ": ui.ativId = d.id; ui.ativNova = false; tela("ativResumo"); break;
     case "fechar-ativresumo": { const a = atividades.find(x=>x.id===ui.ativId); ui.ativNova = false; if(a) irParaDia(diaKey(a.data)); else { ui.screen=null; render(); } break; }
+    case "retro": {
+      if(sessao){ toast("Finalize ou descarte o treino em andamento primeiro."); return; }
+      const ult = ordDesc()[0], f0 = (ult && app.fichas.find(f=>f.id===ult.fichaId)) || app.fichas[0];
+      ui.rt = {fichaId: f0 ? f0.id : null, dia: d.dia || diaKey(new Date()), hora:"18:00", dur: ult && dur(ult)>5 ? String(Math.round(dur(ult)/15)*15||60) : "60", local: ultimoLocal("musc")};
+      ui.rtVolta = ui.screen; tela("retro"); break; }
+    case "fechar-retro": ui.rt = null; ui.screen = ui.rtVolta||null; render(); break;
+    case "rt-ficha": ui.rt.fichaId = d.id; render(); break;
+    case "rt-dur": ui.rt.dur = d.v; render(); break;
+    case "rt-local": ui.rt.local = d.v; render(); break;
+    case "rt-continuar": { const r = ui.rt, f = app.fichas.find(x=>x.id===r.fichaId), m = Math.round(num(r.dur)||0);
+      if(!f){ toast("Escolha o treino."); return; } if(!r.dia){ toast("Escolha a data."); return; } if(m<=0){ toast("Informe a duração."); return; }
+      const ini = new Date(`${r.dia}T${r.hora||"18:00"}`);
+      if(ini > new Date()){ toast("Essa data ainda não chegou."); return; }
+      sessao = {id:uid(), fichaId:f.id, fichaNome:f.nome, local:(r.local||"").trim(), inicio:ini.toISOString(), retro:true, retroDur:m,
+        itens:f.exercicios.map(e=>{ const it = novoItemSessao(e.nome, e.grupo, e.series, e.nota);
+          it.series.forEach(x=>{ if(x.kg==="") x.kg=x.alvoKg||""; if(x.reps==="") x.reps=x.alvoReps||""; x.feito=true; }); it.recolhido=true; return it; })};
+      saveDraft(); ui.rt = null; tela("sessao"); break; }
     case "cal-dia": ui.calDia = ui.calDia===d.dia ? null : d.dia; render(); break;
     case "nova-ativ": abrirAtiv(null, d.dia || (ui.tab==="treinos" && ui.per==="cal" ? ui.calDia : null)); break;
     case "editar-ativ": { const a = atividades.find(x=>x.id===d.id); if(a) abrirAtiv(a); break; }
@@ -1818,7 +1898,7 @@ document.addEventListener("click", async e=>{
     case "excluir-ativ": { if(!armar("at")) return; const id = ui.at.id, dia = ui.at.dia; atividades = atividades.filter(x=>x.id!==id); ui.at = null; irParaDia(dia); toast("Atividade excluída"); await apagarAtividade(id); if(fotos[id]) await salvarFoto(id, null); break; }
     case "ver-sessao": ui.resumoId=d.id; ui.novo=false; tela("resumo"); break;
     case "rm-foto": if(!armar("f:"+d.id)) return; render(); await salvarFoto(d.id, null); render(); break;
-    case "fechar-resumo": ui.screen=null; if(ui.novo){ ui.tab="plano"; } ui.novo=false; render(); break;
+    case "fechar-resumo": ui.screen=null; if(ui.novo && !ui.novoRetro){ ui.tab="plano"; } ui.novo=false; ui.novoRetro=false; render(); break;
     case "atualizar-ficha": { const s=sessoes.find(x=>x.id===ui.resumoId), f=app.fichas.find(x=>x.id===s.fichaId);
       for(const it of s.itens){ const ex=f.exercicios.find(x=>low(x.nome)===low(it.nome)); if(ex) ex.series=it.series.map(x=>({reps:x.reps,kg:x.kg})); }
       el.disabled=true; el.textContent="Treino atualizado"; await salvarApp(); break; }
@@ -1841,6 +1921,8 @@ document.addEventListener("click", async e=>{
 document.addEventListener("input", e=>{
   const t=e.target, d=t.dataset;
   if(d.bind==="ed-nome") ui.ed.draft.nome=t.value;
+  else if(d.edd && ui.ed) ui.ed.draft[d.edd]=t.value;
+  else if(d.rt && ui.rt) ui.rt[d.rt]=t.value;
   else if(d.at && ui.at){ ui.at[d.at]=t.value; if(d.at==="local") ui.at.localAuto=false; }
   else if(d.sloc && sessao){ sessao.local = t.value; saveDraft(); }
   else if(d.exn!=null) ui.ed.draft.exercicios[+d.exn].nota=t.value;
