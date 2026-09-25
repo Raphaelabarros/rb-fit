@@ -18,7 +18,7 @@
 <style>
 :root{
   --bg:#03161C; --bg-top:#0B2A33; --card:#10262E; --card2:#17323C; --field:#0A1E25; --line:#1F3B45;
-  --ink:#F1F6F7; --muted:#8EA3AA; --green:#FF5CA8; --green-dim:#4A1732; --green-ink:#2B0616; --gold:#F2C14E; --red:#FF6B5E;
+  --ink:#F1F6F7; --muted:#8EA3AA; --green:#FF2E9A; --green-dim:#56103A; --green-ink:#2B0616; --gold:#F2C14E; --red:#FF6B5E;
   --cond:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   box-sizing:border-box; color-scheme:dark;
@@ -108,6 +108,16 @@ h1.page{display:flex;align-items:center;gap:10px;font-size:30px;font-weight:600;
 .live{background:var(--card);border-radius:22px;padding:16px 16px 10px;margin-bottom:14px}
 .live .hd{display:flex;gap:14px;align-items:center;margin-bottom:12px}
 .live .nm{font-size:18px;font-weight:500;flex:1}
+.live .hdbtn{text-align:left;min-height:44px;color:inherit}
+.live .nmtx{display:block}
+.live .resumo{display:block;font-size:14px;color:var(--muted);margin-top:3px;font-weight:400}
+.live.fim .resumo{color:var(--green)}
+.live.rec{padding-bottom:16px}
+.live.rec .hd{margin-bottom:0}
+.live.fim{border:1px solid color-mix(in srgb,var(--green) 35%,transparent)}
+.live .chev{min-width:44px;min-height:44px;display:grid;place-items:center;color:var(--muted);border-radius:12px}
+.sessbar{display:flex;align-items:center;justify-content:space-between;margin:-4px 2px 12px;font-size:14px}
+section.live{scroll-margin-top:12px}
 .lhead,.lrow{display:grid;grid-template-columns:34px 1.3fr 1fr 1fr 48px;gap:8px;align-items:center}
 .lhead{font-family:var(--cond);font-weight:700;text-transform:uppercase;color:var(--muted);font-size:14px;padding:0 4px 6px}
 .lrow{border-radius:14px;padding:4px;margin-bottom:6px}
@@ -127,6 +137,10 @@ h1.page{display:flex;align-items:center;gap:10px;font-size:30px;font-weight:600;
 .sumcard{background:linear-gradient(160deg,#133743,#0A1F26);border-radius:28px;padding:24px 22px;border:1px solid var(--line)}
 .sumcard.foto{position:relative;min-height:0;aspect-ratio:4/5;display:flex;flex-direction:column;justify-content:flex-end;background-size:cover;background-position:center;border:0;padding:22px}
 .sumcard.foto .stat .l{color:#E6EEF0}
+.sumnota{margin-top:14px;font-size:15px;color:#CFDCE0}
+.sumloc{margin:8px 0 2px;font-size:15px;color:#E6EEF0}
+.locbar{margin:-6px 0 14px}
+.locbar input{font-size:17px}
 .fotobtns{display:flex;gap:10px}
 .fotobtns .btn{flex:1}
 .btn input[type=file]{display:none}
@@ -176,6 +190,46 @@ nav.tabs button{display:flex;flex-direction:column;align-items:center;justify-co
 nav.tabs button svg{width:24px;height:24px}
 nav.tabs button[aria-current="page"]{background:#071A20;color:var(--ink)}
 .hidden{display:none!important}
+.btn.green,.go.green{box-shadow:0 0 22px rgba(255,46,154,.45),0 0 2px rgba(255,46,154,.9)}
+.chip.g[aria-pressed="true"],.toast{box-shadow:0 0 16px rgba(255,46,154,.5)}
+.clock,.save,.linkbtn{text-shadow:0 0 12px rgba(255,46,154,.55)}
+nav.tabs button[aria-current="page"] svg{filter:drop-shadow(0 0 6px rgba(255,46,154,.7))}
+.cal .day.hoje .dn{box-shadow:inset 0 0 0 2px var(--green),0 0 12px rgba(255,46,154,.55)}
+.fprog{height:6px;border-radius:3px;background:var(--card2);overflow:hidden;margin-top:10px}
+.fprog i{display:block;height:100%;background:var(--green);border-radius:3px;box-shadow:0 0 10px rgba(255,46,154,.8)}
+.fdatas{display:flex;align-items:center;gap:10px;margin-top:12px;background:var(--card);border-radius:18px;padding:14px 16px;width:100%;text-align:left}
+.fdatas .grow{flex:1;min-width:0}
+.fdatas .t1{font-size:16px;font-weight:500}
+.fdatas .t2{font-size:14px;color:var(--muted);margin-top:2px}
+.fdatas.vencida .t2{color:var(--gold)}
+.segcal{grid-template-columns:1.45fr 1fr 1fr 1fr!important}
+.segcal button{overflow:visible!important;text-overflow:clip!important}
+.cal{background:var(--card);border-radius:22px;padding:12px 8px 8px;margin-top:6px}
+.cal .wd,.cal .grid{display:grid;grid-template-columns:repeat(7,1fr);text-align:center}
+.cal .wd span{font-family:var(--cond);font-weight:700;font-size:13px;color:var(--muted);padding:2px 0 8px}
+.cal .day{min-height:54px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:5px;gap:4px;font-variant-numeric:tabular-nums}
+.cal .day .dn{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px}
+.cal .day.hoje .dn{box-shadow:inset 0 0 0 2px var(--green);color:var(--green);font-weight:600}
+.cal .day.sel{background:var(--card2)}
+.cal .day.fut .dn{color:#5E757C}
+.cal .day.out{pointer-events:none}
+.cal .pts{display:flex;gap:3px;height:7px}
+.cal .pts i{width:7px;height:7px;border-radius:50%}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:12px 4px 0;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:9px;height:9px;border-radius:50%}
+.legend b{color:var(--ink);font-weight:600}
+.item{display:flex;gap:14px;align-items:center;background:var(--card);border-radius:18px;padding:12px 14px;margin-top:10px;width:100%;text-align:left}
+.item .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;flex:none}
+.item .grow{flex:1;min-width:0}
+.item .t1{display:block;font-size:17px;font-weight:500}
+.item .t2{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.tipos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tipo{background:var(--card);border:2px solid transparent;border-radius:18px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:14px;min-height:88px;text-align:center}
+.tipo .em{font-size:28px;line-height:1}
+.tipo[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,var(--card))}
+.grid2>.mini{min-width:0}
+.mini input[type=date],.mini input[type=time]{min-width:0;width:100%;font-size:16px;-webkit-appearance:none;appearance:none;color:var(--ink)}
 .thumb{position:relative;flex:none;width:72px;height:72px;cursor:zoom-in}
 .tin-ek{background:#fff!important}
 .tin-ek img{width:100%;height:100%;object-fit:contain;padding:4px;display:block}
@@ -322,9 +376,9 @@ const DEMO = (function(){
     J.kneeR=add(J.hipR,P.th,tl); J.ankR=add(J.kneeR,P.sh,L.SH); J.kneeL=add(J.hipL,m(P.th),tl); J.ankL=add(J.kneeL,m(P.sh),L.SH);
     return J;
   }
-  const C={body:"#D6E3E7", back:"#6F868D", hl:"#FF5CA8", hlb:"#C23C7E", prop:"#4A6A74", prop2:"#2B4750", w:"#7F9BA4", bg:"#F3F4F6", pad:"#23262B"};
+  const C={body:"#D6E3E7", back:"#6F868D", hl:"#FF2E9A", hlb:"#C8157A", prop:"#4A6A74", prop2:"#2B4750", w:"#7F9BA4", bg:"#F3F4F6", pad:"#23262B"};
   const K={skin:"#E2B08F", skinB:"#C99273", line:"#9C6A50", cloth:"#24262B", clothB:"#3A3D44", hair:"#2A1D18", shoe:"#F4F5F7", shoeL:"#9AA3AD",
-    metal:"#B7BFC8", metalD:"#6E7883", metalL:"#E3E8EC", pad:"#23262B", padL:"#3B3F46", mus:"#FF5CA8", musD:"#D63F86"};
+    metal:"#B7BFC8", metalD:"#6E7883", metalL:"#E3E8EC", pad:"#23262B", padL:"#3B3F46", mus:"#FF2E9A", musD:"#D63F86"};
   const f1=n=>n.toFixed(1);
   const rawln=(a,b,c,w)=>`<line x1="${f1(a[0])}" y1="${f1(a[1])}" x2="${f1(b[0])}" y2="${f1(b[1])}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
   /* aparelhos: tubos metálicos, estofados pretos, cabos cinza */
@@ -675,11 +729,11 @@ const MEDIDAS = [["peso","Peso","kg"],["gordura","Gordura","%"],["cintura","Cint
 const LS = "meutreino:v2", LS_OLD = "meutreino:v1", LS_DRAFT = "meutreino:sessao2";
 
 let app = {v:2, nome:"", pastas:[], fichas:[], custom:[]};
-let sessoes = [], medidas = [];
+let sessoes = [], medidas = [], atividades = [];
 const fotos = {};  /* id do treino -> imagem (data URL) */
 let sessao = null;
 const ui = {tab:"plano", screen:null, pasta:null, pastaMenu:false, ed:null, pk:{q:"",g:"Todos"}, resumoId:null, novo:false, exNome:null,
-  per:"ano", off:0, prog:"", metric:"peso", showForm:false, armed:null, exLib:{q:"",g:"Todos"}, editNome:false, exTab:"instr", exVolta:null};
+  per:"cal", off:0, calDia:null, at:null, prog:"", metric:"peso", showForm:false, armed:null, exLib:{q:"",g:"Todos"}, editNome:false, exTab:"instr", exVolta:null};
 const store = {base:null};
 const $app = document.getElementById("app"), $nav = document.getElementById("nav");
 
@@ -720,18 +774,19 @@ function normApp(){
   app.fichas = (app.fichas||[]).map(normFicha);
   for(const f of app.fichas) if(!app.pastas.some(p=>p.id===f.pastaId)) f.pastaId = app.pastas[0].id;
   app.custom = app.custom || [];
+  app.tiposAtiv = app.tiposAtiv || [];
   if(!app.pastas.some(p=>p.id===ui.pasta)) ui.pasta = app.pastas[0].id;
 }
 
 /* ---------- Armazenamento local ---------- */
 const SEED = {"app": {"custom": [], "fichas": [{"exercicios": [{"grupo": "Quadríceps", "id": "e1", "nome": "Leg Press 45", "nota": "Pode ser qualquer leg press", "series": [{"kg": "65", "reps": "30"}, {"kg": "65", "reps": "25"}, {"kg": "65", "reps": "20"}, {"kg": "65", "reps": "15"}]}, {"grupo": "Peito", "id": "e2", "nome": "Supino Reto Máquina", "nota": "", "series": [{"kg": "15", "reps": "15"}, {"kg": "15", "reps": "15"}, {"kg": "15", "reps": "15"}]}, {"grupo": "Quadríceps", "id": "e3", "nome": "Cadeira Extensora", "nota": "", "series": [{"kg": "21", "reps": "25"}, {"kg": "21", "reps": "20"}, {"kg": "21", "reps": "15"}, {"kg": "21", "reps": "10"}]}, {"grupo": "Costas", "id": "e4", "nome": "Puxada Fechada (Pegada Supinada)", "nota": "", "series": [{"kg": "13", "reps": "15"}, {"kg": "13", "reps": "15"}, {"kg": "13", "reps": "15"}]}, {"grupo": "Posteriores", "id": "e5", "nome": "Cadeira Flexora", "nota": "", "series": [{"kg": "16", "reps": "30"}, {"kg": "16", "reps": "25"}, {"kg": "16", "reps": "20"}, {"kg": "16", "reps": "15"}]}, {"grupo": "Tríceps", "id": "e6", "nome": "Tríceps Mergulho Máquina", "nota": "", "series": [{"kg": "4", "reps": "15"}, {"kg": "4", "reps": "15"}, {"kg": "4", "reps": "15"}]}, {"grupo": "Abdutores", "id": "e7", "nome": "Cadeira Abdutora", "nota": "", "series": [{"kg": "42", "reps": "30"}, {"kg": "42", "reps": "30"}, {"kg": "42", "reps": "30"}]}, {"grupo": "Bíceps", "id": "e8", "nome": "Rosca bíceps na Polia Baixa (Barra Reta)", "nota": "", "series": [{"kg": "10", "reps": "15"}, {"kg": "10", "reps": "15"}, {"kg": "10", "reps": "15"}]}, {"grupo": "Adutores", "id": "e9", "nome": "Cadeira Adutora", "nota": "", "series": [{"kg": "26", "reps": "30"}, {"kg": "26", "reps": "30"}, {"kg": "26", "reps": "30"}]}, {"grupo": "Ombros", "id": "e10", "nome": "Remada Alta na Polia com Barra Reta", "nota": "", "series": [{"kg": "10", "reps": "15"}, {"kg": "10", "reps": "15"}, {"kg": "10", "reps": "15"}, {"kg": "10", "reps": "15"}]}, {"grupo": "Panturrilha", "id": "e11", "nome": "Panturrilha no Leg Press Horizontal", "nota": "", "series": [{"kg": "21", "reps": "30"}, {"kg": "21", "reps": "30"}, {"kg": "21", "reps": "30"}]}, {"grupo": "Abdômen", "id": "e12", "nome": "Abdominal Supra Banco Declinado", "nota": "", "series": [{"kg": "", "reps": "30"}, {"kg": "", "reps": "30"}, {"kg": "", "reps": "30"}]}], "id": "treino-unico", "nome": "Treino Unico", "pastaId": "rotina1"}], "nome": "Raphaela Barros", "pastas": [{"id": "rotina1", "nome": "Rotina 1"}], "v": 2}, "sessoes": [{"data": "2026-09-24T01:36:53.447Z", "fichaId": "treino-unico", "fichaNome": "Treino Unico", "fim": "2026-09-24T01:37:54.225Z", "id": "muev2z0nakcwe", "itens": [{"grupo": "Quadríceps", "nome": "Leg Press 45", "series": [{"kg": "65", "pr": true, "reps": "30"}, {"kg": "65", "reps": "25"}]}], "recordes": 1}], "medidas": []};
 let apagados = [];
-function saveLocal(){ try{ localStorage.setItem(LS, JSON.stringify({app, sessoes, medidas, apagados})); }catch(e){} }
+function saveLocal(){ try{ localStorage.setItem(LS, JSON.stringify({app, sessoes, medidas, atividades, apagados})); }catch(e){} }
 function saveDraft(){ try{ sessao ? localStorage.setItem(LS_DRAFT, JSON.stringify(sessao)) : localStorage.removeItem(LS_DRAFT); }catch(e){} }
 function loadLocal(){
   try{
     const s = JSON.parse(localStorage.getItem(LS)||"null");
-    if(s){ app = s.app||app; sessoes = s.sessoes||[]; medidas = s.medidas||[]; apagados = s.apagados||[]; }
+    if(s){ app = s.app||app; sessoes = s.sessoes||[]; medidas = s.medidas||[]; atividades = s.atividades||[]; apagados = s.apagados||[]; }
     else { app = clone(SEED.app); sessoes = clone(SEED.sessoes); medidas = clone(SEED.medidas); }
     sessao = JSON.parse(localStorage.getItem(LS_DRAFT)||"null");
   }catch(e){}
@@ -783,7 +838,7 @@ function mesclar(rem){
   const ap = new Set([...(apagados||[]), ...((rem&&rem.apagados)||[])]);
   const porId = (loc, re) => { const m = new Map(); for(const x of (re||[])) m.set(x.id,x); for(const x of (loc||[])) m.set(x.id,x); return [...m.values()].filter(x=>!ap.has(x.id)); };
   const appFinal = (!rem || !rem.app || (app.atualizadoEm||"") >= (rem.app.atualizadoEm||"")) ? app : rem.app;
-  return { v:2, app:appFinal, sessoes:porId(sessoes, rem&&rem.sessoes), medidas:porId(medidas, rem&&rem.medidas), apagados:[...ap] };
+  return { v:2, app:appFinal, sessoes:porId(sessoes, rem&&rem.sessoes), medidas:porId(medidas, rem&&rem.medidas), atividades:porId(atividades, rem&&rem.atividades), apagados:[...ap] };
 }
 let syncT = null, syncando = false, syncDeNovo = false;
 function agendarSync(ms=1200){ if(!gh.cfg) return; clearTimeout(syncT); marcar("pendente"); syncT = setTimeout(sincronizar, ms); }
@@ -795,15 +850,15 @@ async function sincronizar(){
   try{
     for(let tent=0; tent<3; tent++){
       const {sha, data:rem} = await ghGetJson("dados.json");
-      const antes = JSON.stringify({app, sessoes, medidas});
+      const antes = JSON.stringify({app, sessoes, medidas, atividades});
       const m = mesclar(rem);
-      app = m.app; sessoes = m.sessoes; medidas = m.medidas; apagados = m.apagados; normApp(); saveLocal();
+      app = m.app; sessoes = m.sessoes; medidas = m.medidas; atividades = m.atividades||[]; apagados = m.apagados; normApp(); saveLocal();
       const txt = JSON.stringify(m, null, 1);
       if(!rem || txt !== JSON.stringify(rem, null, 1)){
         try{ await ghReq("PUT", "dados.json", {message:"Treino: "+new Date().toLocaleString("pt-BR"), content:b64enc(txt), ...(sha?{sha}:{})}); }
         catch(e){ if(e.status===409 || e.status===422){ continue; } throw e; }
       }
-      if(JSON.stringify({app, sessoes, medidas}) !== antes && ui.screen!=="sessao" && ui.screen!=="editor") render();
+      if(JSON.stringify({app, sessoes, medidas, atividades}) !== antes && ui.screen!=="sessao" && ui.screen!=="editor") render();
       break;
     }
     await processarFila();
@@ -834,6 +889,8 @@ const salvarApp = () => { app.atualizadoEm = new Date().toISOString(); saveLocal
 const salvarSessao = s => { saveLocal(); agendarSync(400); };
 const apagarSessao = id => { apagados.push(id); saveLocal(); agendarSync(); };
 const salvarMedida = m => { saveLocal(); agendarSync(); };
+const salvarAtividade = x => { saveLocal(); agendarSync(400); };
+const apagarAtividade = id => { apagados.push(id); saveLocal(); agendarSync(); };
 const apagarMedida = id => { apagados.push(id); saveLocal(); agendarSync(); };
 
 const imgs = {};
@@ -937,10 +994,10 @@ function telaPlano(){
   const fichas = app.fichas.filter(f=>f.pastaId===ui.pasta);
   const ultDur = {}; for(const s of ordDesc()) if(!(s.fichaId in ultDur)) ultDur[s.fichaId] = dur(s);
   return `${bannerSessao()}
-  <h1 class="page">${I.doc} Personalizado</h1>
+  <h1 class="page"><svg width="34" height="22" viewBox="0 0 22 14" aria-hidden="true" style="color:var(--green)"><rect x="0" y="3" width="3.5" height="8" rx="1.2" fill="currentColor"/><rect x="4.5" y="0.5" width="3.5" height="13" rx="1.2" fill="currentColor"/><rect x="8" y="5.8" width="6" height="2.4" rx="1" fill="currentColor"/><rect x="14" y="0.5" width="3.5" height="13" rx="1.2" fill="currentColor"/><rect x="18.5" y="3" width="3.5" height="8" rx="1.2" fill="currentColor"/></svg> RB Fit</h1>
   ${ult ? `<div class="sec cap">Últimos treinos</div>
     <button class="card" style="width:100%;text-align:left" data-action="ver-sessao" data-id="${ult.id}">
-      <div class="wk" style="margin:0;padding:0;background:none"><div class="h"><div><div class="n">${esc(ult.fichaNome)}</div><div class="muted small">${dataNum(ult.data)}</div></div><span class="dots">•••</span></div></div>
+      <div class="wk" style="margin:0;padding:0;background:none"><div class="h"><div><div class="n">${esc(ult.fichaNome)}</div><div class="muted small">${dataNum(ult.data)}${ult.local?` • ${pin(ult.local)}`:""}</div></div><span class="dots">•••</span></div></div>
       <div class="stats">
         <div class="stat"><div class="l">Músculos</div><div class="tiles" style="margin-top:4px">${tilesGrupos(grupos(ult))}</div></div>
         <div class="stat"><div class="l">Tempo</div><div class="v">${dur(ult)}min</div></div>
@@ -949,13 +1006,19 @@ function telaPlano(){
         <div class="stat"><div class="l">Total reps</div><div class="v">${fmt(totReps(ult),0)}</div></div>
         <div class="stat"><div class="l">Peso total (kg)</div><div class="v">${fmt(volume(ult),0)}</div></div>
       </div></button>` : ""}
-  <div class="sec cap">Pastas</div>
-  <div class="chips">${app.pastas.map(p=>`<button class="chip" data-action="pasta" data-id="${p.id}" aria-pressed="${p.id===ui.pasta}">${esc(p.nome)}${p.id===ui.pasta?' <span aria-label="Opções da pasta">•••</span>':""}</button>`).join("")}
-    <button class="chip" data-action="nova-pasta">Criar Pasta <span style="font-size:20px">+</span></button></div>
+  <div class="sec cap">Fichas de treino</div>
+  <div class="chips">${app.pastas.map(p=>`<button class="chip" data-action="pasta" data-id="${p.id}" aria-pressed="${p.id===ui.pasta}">${esc(p.nome)}${p.id===ui.pasta?' <span aria-label="Opções da ficha">•••</span>':""}</button>`).join("")}
+    <button class="chip" data-action="nova-pasta">Criar ficha <span style="font-size:20px">+</span></button></div>
+  ${!ui.pastaMenu && pasta ? infoFicha(pasta) : ""}
   ${ui.pastaMenu && pasta ? `<div class="card" style="margin-top:12px">
-      <div class="field" style="background:var(--field)"><label for="pasta-nome">Nome da pasta</label><input id="pasta-nome" value="${esc(pasta.nome)}"></div>
+      <div class="field" style="background:var(--field)"><label for="pasta-nome">Nome da ficha de treino</label><input id="pasta-nome" value="${esc(pasta.nome)}"></div>
+      <div class="grid2" style="margin-top:10px">
+        <div class="mini"><label for="pasta-ini">Início</label><input id="pasta-ini" type="date" value="${esc(pasta.inicio||"")}"></div>
+        <div class="mini"><label for="pasta-fim">Término</label><input id="pasta-fim" type="date" value="${esc(pasta.fim||"")}"></div>
+      </div>
+      <div class="chips" style="margin-top:10px;flex-wrap:wrap;overflow:visible">${[4,6,8,12].map(s=>`<button class="chip sm g" data-action="pasta-semanas" data-s="${s}">${s} semanas</button>`).join("")}</div>
       <button class="btn green" data-action="salvar-pasta">Salvar</button>
-      ${app.pastas.length>1?`<button class="btn danger" data-action="excluir-pasta">${ui.armed==="pasta"?"Toque de novo para excluir":"Excluir pasta"}</button>`:""}
+      ${app.pastas.length>1?`<button class="btn danger" data-action="excluir-pasta">${ui.armed==="pasta"?"Toque de novo para excluir":"Excluir ficha de treino"}</button>`:""}
     </div>` : ""}
   ${fichas.map(f=>`<div class="wk">
       <button class="h" style="width:100%;text-align:left" data-action="editar" data-id="${f.id}">
@@ -963,7 +1026,25 @@ function telaPlano(){
         <span class="dots" aria-label="Editar treino">•••</span></button>
       <div class="foot"><div class="tiles">${tilesGrupos([...new Set(f.exercicios.map(e=>e.grupo))])}</div>
       <button class="go" data-action="iniciar" data-id="${f.id}" ${sessao?"disabled":""}>Iniciar</button></div></div>`).join("")}
-  <button class="btn" data-action="novo-treino"><span style="font-family:var(--body);font-weight:400;font-size:26px">+</span> Adicionar treino</button>`;
+  <button class="btn" data-action="novo-treino"><span style="font-family:var(--body);font-weight:400;font-size:26px">+</span> Adicionar treino</button>
+  <button class="btn" data-action="nova-ativ">🎾 Registrar atividade</button>`;
+}
+function infoFicha(p){
+  const fdt = k => dt(k).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
+  if(!p.inicio && !p.fim) return `<button class="fdatas" data-action="pasta" data-id="${p.id}"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" aria-hidden="true" style="flex:none;filter:drop-shadow(0 0 5px rgba(255,46,154,.6))"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span class="grow"><span class="t1" style="display:block">Definir início e término da ficha</span><span class="t2" style="display:block">Para acompanhar quanto tempo falta para trocar</span></span><span class="muted">›</span></button>`;
+  const hoje = dt(diaKey(new Date())), dia = 864e5;
+  let t2 = "", prog = null, venc = false;
+  if(p.inicio && p.fim){
+    const ini = dt(p.inicio), fim = dt(p.fim), tot = Math.max(1, Math.round((fim-ini)/dia)+1), passados = Math.round((hoje-ini)/dia)+1;
+    const semTot = Math.max(1, Math.ceil(tot/7)), semAt = Math.min(semTot, Math.max(1, Math.ceil(passados/7)));
+    if(hoje < ini){ const f = Math.round((ini-hoje)/dia); t2 = `Começa em ${f} dia${f>1?"s":""}`; prog = 0; }
+    else if(hoje > fim){ const v = Math.round((hoje-fim)/dia); t2 = `Terminou há ${v} dia${v>1?"s":""} — hora de trocar a ficha`; prog = 1; venc = true; }
+    else { const falta = Math.round((fim-hoje)/dia); t2 = `Semana ${semAt} de ${semTot} • ${falta===0?"último dia":`faltam ${falta} dia${falta>1?"s":""}`}`; prog = passados/tot; }
+  } else if(p.inicio){ const d = Math.round((hoje-dt(p.inicio))/dia)+1; t2 = d>0 ? `Em uso há ${d} dia${d>1?"s":""} • sem data de término` : "Sem data de término"; }
+  else t2 = "Sem data de início";
+  return `<button class="fdatas${venc?" vencida":""}" data-action="pasta" data-id="${p.id}" aria-label="Datas da ficha: editar"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" aria-hidden="true" style="flex:none;filter:drop-shadow(0 0 5px rgba(255,46,154,.6))"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span class="grow">
+    <span class="t1" style="display:block">${p.inicio?fdt(p.inicio):"—"} → ${p.fim?fdt(p.fim):"sem término"}</span><span class="t2" style="display:block">${t2}</span>
+    ${prog!=null?`<span class="fprog" style="display:block"><i style="width:${Math.round(Math.min(1,Math.max(0,prog))*100)}%"></i></span>`:""}</span></button>`;
 }
 function tilesGrupos(gs){ return gs.slice(0,2).map(g=>tile(g)).join("") + (gs.length>2?`<span class="more">+${gs.length-2}</span>`:""); }
 function bannerSessao(){
@@ -972,6 +1053,66 @@ function bannerSessao(){
     <span class="clock" id="clock">${relogio()}</span><span style="flex:1"><b>Treino em andamento</b><br><span class="muted small">${esc(sessao.fichaNome)}</span></span><span class="cap" style="color:var(--green)">Voltar</span></button>`;
 }
 
+/* ---------- Atividades (tênis, beach tênis, futevôlei...) ---------- */
+const ATIV_BASE = [{id:"tenis",nome:"Tênis",emoji:"🎾",cor:"#C8F04B"},{id:"beach",nome:"Beach tênis",emoji:"🏖️",cor:"#F2C14E"},{id:"futevolei",nome:"Futevôlei",emoji:"⚽",cor:"#58C4F0"},{id:"spinning",nome:"Spinning",emoji:"🚴",cor:"#FF8A3D"}];
+const COR_MUSC = "#FF2E9A", COR_OUTRA = "#B79CFF";
+const tiposAtiv = () => [...ATIV_BASE, ...(app.tiposAtiv||[]).map(t=>({...t, emoji:t.emoji||"🏃", cor:t.cor||COR_OUTRA}))];
+const tipoAtiv = id => tiposAtiv().find(t=>t.id===id) || {id, nome:"Atividade", emoji:"🏃", cor:COR_OUTRA};
+const INTENS = {leve:"Leve", moderada:"Moderada", intensa:"Intensa"};
+const p2 = n => String(n).padStart(2,"0");
+const diaKey = d => { const x = d instanceof Date ? d : dt(d); return `${x.getFullYear()}-${p2(x.getMonth()+1)}-${p2(x.getDate())}`; };
+const fmtDur = m => { m = Math.round(+m||0); return m>=60 ? `${Math.floor(m/60)}h${m%60?p2(m%60):""}` : `${m}min`; };
+const fimAtiv = a => new Date(dt(a.data).getTime() + (+a.dur||0)*60000).toISOString();
+const cap1 = s => s.charAt(0).toUpperCase()+s.slice(1);
+const nomeDia = key => cap1(dt(key).toLocaleDateString("pt-BR",{weekday:"long", day:"numeric", month:"long"}));
+function locaisRecentes(tipo){
+  const all = [...sessoes.map(s=>({d:s.data,l:s.local,t:"musc"})), ...atividades.map(a=>({d:a.data,l:a.local,t:a.tipo}))]
+    .filter(x=>x.l && x.l.trim()).sort((a,b)=>b.d.localeCompare(a.d));
+  const seq = tipo ? [...all.filter(x=>x.t===tipo), ...all] : all;
+  return [...new Set(seq.map(x=>x.l.trim()))].slice(0,6);
+}
+const ultimoLocal = tipo => { const x = (tipo==="musc" ? sessoes : atividades.filter(a=>a.tipo===tipo)).filter(s=>s.local).sort((a,b)=>b.data.localeCompare(a.data))[0]; return x ? x.local : ""; };
+const dlLocais = () => `<datalist id="dl-locais">${locaisRecentes().map(l=>`<option value="${esc(l)}"></option>`).join("")}</datalist>`;
+const pin = l => l ? `📍 ${esc(l)}` : "";
+function doDia(key){
+  const ss = sessoes.filter(s=>diaKey(s.data)===key).map(s=>({k:"s", data:s.data, o:s}));
+  const as = atividades.filter(a=>diaKey(a.data)===key).map(a=>({k:"a", data:a.data, o:a}));
+  return [...ss, ...as].sort((x,y)=>x.data.localeCompare(y.data));
+}
+function cardSessaoCurto(s){
+  return `<button class="item" data-action="ver-sessao" data-id="${s.id}"><span class="ic" style="background:color-mix(in srgb,${COR_MUSC} 18%,var(--card2))">🏋️</span>
+    <span class="grow"><span class="t1">${esc(s.fichaNome)}</span><span class="t2">Musculação • ${hora(s.data)}${s.fim?"–"+hora(s.fim):""} • ${fmtDur(dur(s))} • ${fmt(volume(s),0)} kg</span>${s.local?`<span class="t2">${pin(s.local)}</span>`:""}</span><span class="muted">›</span></button>`;
+}
+function cardAtivCurto(a){
+  const t = tipoAtiv(a.tipo);
+  return `<button class="item" data-action="ver-ativ" data-id="${a.id}"><span class="ic" style="background:color-mix(in srgb,${t.cor} 22%,var(--card2))">${t.emoji}</span>
+    <span class="grow"><span class="t1">${esc(t.nome)}</span><span class="t2">${hora(a.data)}–${hora(fimAtiv(a))} • ${fmtDur(a.dur)}${a.intens?` • ${INTENS[a.intens]}`:""}</span>${a.local?`<span class="t2">${pin(a.local)}</span>`:""}${a.nota?`<span class="t2" style="color:#CFDCE0">${esc(a.nota)}</span>`:""}</span><span class="muted">›</span></button>`;
+}
+function telaCalendario(){
+  const n = new Date(), ini = new Date(n.getFullYear(), n.getMonth()+ui.off, 1), fim = new Date(ini.getFullYear(), ini.getMonth()+1, 1);
+  const hojeK = diaKey(n), nd = new Date(fim - 864e5).getDate();
+  const noMes = x => { const d = dt(x.data); return d>=ini && d<fim; };
+  const mesS = sessoes.filter(noMes), mesA = atividades.filter(noMes);
+  let cel = ""; for(let i=0;i<ini.getDay();i++) cel += `<span class="day out"></span>`;
+  for(let d=1; d<=nd; d++){
+    const key = `${ini.getFullYear()}-${p2(ini.getMonth()+1)}-${p2(d)}`, itens = doDia(key);
+    const cores = [...new Set(itens.map(x=>x.k==="s"?COR_MUSC:tipoAtiv(x.o.tipo).cor))];
+    const desc = itens.length ? itens.map(x=>x.k==="s"?"musculação":tipoAtiv(x.o.tipo).nome).join(", ") : "nada registrado";
+    cel += `<button class="day${key===hojeK?" hoje":""}${key===ui.calDia?" sel":""}${key>hojeK?" fut":""}" data-action="cal-dia" data-dia="${key}" aria-label="${d}: ${esc(desc)}" aria-pressed="${key===ui.calDia}">
+      <span class="dn">${d}</span><span class="pts">${cores.slice(0,4).map(c=>`<i style="background:${c}"></i>`).join("")}</span></button>`;
+  }
+  const cont = {}; for(const a of mesA) cont[a.tipo] = (cont[a.tipo]||0)+1;
+  const legenda = [`<span><i style="background:${COR_MUSC}"></i>Musculação <b>${mesS.length}</b></span>`,
+    ...tiposAtiv().filter(t=>cont[t.id]||ATIV_BASE.some(b=>b.id===t.id)).map(t=>`<span><i style="background:${t.cor}"></i>${esc(t.nome)} <b>${cont[t.id]||0}</b></span>`)].join("");
+  const selNoMes = ui.calDia && dt(ui.calDia)>=ini && dt(ui.calDia)<fim;
+  const detalhe = selNoMes ? (()=>{ const itens = doDia(ui.calDia);
+      return `<div class="sec cap">${esc(nomeDia(ui.calDia))}</div>
+      ${itens.length ? itens.map(x=>x.k==="s"?cardSessaoCurto(x.o):cardAtivCurto(x.o)).join("") : `<p class="muted" style="margin:0 2px">Nada registrado neste dia.</p>`}
+      <button class="btn" data-action="nova-ativ" data-dia="${ui.calDia}"><span style="font-family:var(--body);font-weight:400;font-size:26px">+</span> Registrar atividade</button>`; })()
+    : `<p class="muted small" style="margin:14px 4px 0">Toque num dia para ver o que você fez.</p>`;
+  return `<div class="cal"><div class="wd">${["D","S","T","Q","Q","S","S"].map(x=>`<span>${x}</span>`).join("")}</div><div class="grid">${cel}</div></div>
+    <div class="legend">${legenda}</div>${detalhe}`;
+}
 function periodo(){
   const n = new Date(); let a, b, label;
   if(ui.per==="semana"){
@@ -981,16 +1122,26 @@ function periodo(){
   } else if(ui.per==="mes"){
     a = new Date(n.getFullYear(), n.getMonth()+ui.off, 1); b = new Date(a.getFullYear(), a.getMonth()+1, 1);
     label = a.toLocaleDateString("pt-BR",{month:"long",year:"numeric"}).replace(" de "," ");
+  } else if(ui.per==="cal"){
+    a = new Date(n.getFullYear(), n.getMonth()+ui.off, 1); b = new Date(a.getFullYear(), a.getMonth()+1, 1);
+    label = cap1(a.toLocaleDateString("pt-BR",{month:"long",year:"numeric"}).replace(" de "," "));
   } else { a = new Date(n.getFullYear()+ui.off,0,1); b = new Date(a.getFullYear()+1,0,1); label = String(a.getFullYear()); }
   return {a,b,label};
 }
 function telaTreinos(){
   const {a,b,label} = periodo();
   const lista = ordDesc().filter(s => { const d = dt(s.data); return d>=a && d<b; });
-  return `<div class="topbar"><span></span><div class="t">Treinos</div><span style="width:52px"></span></div>
-  <div class="seg">${[["semana","Semana"],["mes","Mês"],["ano","Ano"]].map(([k,l])=>`<button data-action="per" data-per="${k}" aria-pressed="${ui.per===k}">${l}</button>`).join("")}</div>
+  const ativs = atividades.filter(x => { const d = dt(x.data); return d>=a && d<b; });
+  const mix = [...lista.map(s=>({k:"s",data:s.data,o:s})), ...ativs.map(x=>({k:"a",data:x.data,o:x}))].sort((x,y)=>y.data.localeCompare(x.data));
+  const cardAtiv = x => { const t = tipoAtiv(x.tipo); return `<div class="hist"><button style="width:100%;text-align:left" data-action="ver-ativ" data-id="${x.id}">
+      <div class="top"><span>${dataCurta(x.data)} / ${hora(x.data)}-${hora(fimAtiv(x))}<br><b style="color:var(--ink);font-weight:500;font-size:18px">${t.emoji} ${esc(t.nome)}</b></span><span class="dots">›</span></div>
+      <div class="stats"><div class="stat"><div class="v">${fmtDur(x.dur)}</div><div class="l">Tempo</div></div>${x.intens?`<div class="stat"><div class="v">${INTENS[x.intens]}</div><div class="l">Intensidade</div></div>`:""}</div>
+      ${x.local?`<div class="muscles">${pin(x.local)}</div>`:""}${x.nota?`<div class="muscles" style="margin-top:6px">${esc(x.nota)}</div>`:""}</button></div>`; };
+  const addBtn = `<button class="round" data-action="nova-ativ" aria-label="Registrar atividade" style="font-size:24px">+</button>`;
+  return `<div class="topbar"><span></span><div class="t">Treinos</div>${addBtn}</div>
+  <div class="seg seg4 segcal">${[["cal","Calendário"],["semana","Semana"],["mes","Mês"],["ano","Ano"]].map(([k,l])=>`<button data-action="per" data-per="${k}" aria-pressed="${ui.per===k}">${l}</button>`).join("")}</div>
   <div class="period"><button data-action="off" data-d="-1" aria-label="Período anterior">‹</button><b>${esc(label)}</b><button data-action="off" data-d="1" aria-label="Próximo período">›</button></div>
-  ${lista.length ? lista.map(s=>`<div class="hist">
+  ${ui.per==="cal" ? telaCalendario() : mix.length ? mix.map(({k,o:s})=>k==="a"?cardAtiv(s):`<div class="hist">
       <div class="top"><button style="flex:1;text-align:left" data-action="ver-sessao" data-id="${s.id}">${dataCurta(s.data)} / ${hora(s.data)}${s.fim?"-"+hora(s.fim):""}<br><b style="color:var(--ink);font-weight:500;font-size:18px">${esc(s.fichaNome)}</b></button>
         <button class="dots" data-action="rm-sessao" data-id="${s.id}" aria-label="Excluir treino">${ui.armed==="s:"+s.id?'<span class="small" style="color:var(--red)">Excluir?</span>':"•••"}</button></div>
       <button style="width:100%;text-align:left" data-action="ver-sessao" data-id="${s.id}">
@@ -1001,8 +1152,8 @@ function telaTreinos(){
         <div class="stat"><div class="v">${fmt(volume(s),0)}</div><div class="l">Volume (kg)</div></div>
         <div class="stat"><div class="v">🏆 ${s.recordes||0}</div><div class="l">Recordes</div></div>
       </div>
-      <div class="muscles">${grupos(s).map(esc).join("  •  ")}</div></button></div>`).join("")
-  : `<div class="empty"><p>Nenhum treino neste período.</p></div>`}`;
+      <div class="muscles">${grupos(s).map(esc).join("  •  ")}</div>${s.local?`<div class="muscles" style="margin-top:6px">${pin(s.local)}</div>`:""}</button></div>`).join("")
+  : `<div class="empty"><p>Nada registrado neste período.</p></div>`}`;
 }
 
 function telaProgresso(){
@@ -1010,13 +1161,13 @@ function telaProgresso(){
   if(!ss.length) return `<div class="topbar"><span></span><div class="t">Progresso</div><span style="width:52px"></span></div><div class="empty"><p>Finalize um treino para ver seu progresso aqui.</p></div>`;
   const n = new Date(); const seg = new Date(n.getFullYear(), n.getMonth(), n.getDate()-((n.getDay()+6)%7));
   const sem = []; for(let i=7;i>=0;i--){ const a=new Date(seg); a.setDate(seg.getDate()-7*i); const b=new Date(a); b.setDate(a.getDate()+7);
-    sem.push({x:`${a.getDate()}/${a.getMonth()+1}`, y:ss.filter(s=>{const d=dt(s.data);return d>=a&&d<b;}).length}); }
+    sem.push({x:`${a.getDate()}/${a.getMonth()+1}`, y:ss.filter(s=>{const d=dt(s.data);return d>=a&&d<b;}).length + atividades.filter(s=>{const d=dt(s.data);return d>=a&&d<b;}).length}); }
   const vol = [...ss].reverse().slice(-12).map(s=>({x:dataCurta(s.data), y:Math.round(volume(s))}));
   const nomes = [...new Set(ss.flatMap(s=>s.itens.map(i=>i.nome)))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
   if(!nomes.includes(ui.prog)) ui.prog = nomes[0];
   const pts = [...ss].reverse().map(s=>{ const it=s.itens.find(i=>i.nome===ui.prog); const ks=it?it.series.map(x=>num(x.kg)).filter(v=>v!=null):[]; return ks.length?{x:dataCurta(s.data),y:Math.max(...ks)}:null; }).filter(Boolean);
   return `<div class="topbar"><span></span><div class="t">Progresso</div><span style="width:52px"></span></div>
-  <div class="chart"><div class="ttl"><span class="cap">Treinos por semana</span><span class="muted small">8 semanas</span></div>${barras(sem)}</div>
+  <div class="chart"><div class="ttl"><span class="cap">Treinos e atividades por semana</span><span class="muted small">8 semanas</span></div>${barras(sem)}</div>
   <div class="chart"><div class="ttl"><span class="cap">Volume por treino (kg)</span></div>${linha(vol)}</div>
   <div class="chart"><div class="ttl"><span class="cap">Carga máxima</span></div>
     <select class="search" data-action="prog" aria-label="Exercício" style="margin-bottom:12px">${nomes.map(x=>`<option ${x===ui.prog?"selected":""}>${esc(x)}</option>`).join("")}</select>${linha(pts)}</div>`;
@@ -1037,7 +1188,7 @@ function telaExercicios(){
 }
 
 function telaPerfil(){
-  const tempo = sessoes.reduce((t,s)=>t+dur(s),0);
+  const tempo = sessoes.reduce((t,s)=>t+dur(s),0) + atividades.reduce((t,a)=>t+(+a.dur||0),0);
   const ini = (app.nome||"Eu").split(/\s+/).map(p=>p[0]).slice(0,2).join("").toUpperCase();
   return `<div class="topbar" style="grid-template-columns:1fr auto"><h1 class="page" style="margin:0">Perfil</h1><button class="round" data-action="editar-nome" aria-label="Editar nome">${I.edit}</button></div>
   <div class="profile"><div class="avatar">${esc(ini)}</div><div>
@@ -1058,7 +1209,7 @@ function scrEditor(){
   const d = ui.ed.draft, pasta = app.pastas.find(p=>p.id===d.pastaId);
   return `<div class="topbar"><button class="round" data-action="fechar-editor" aria-label="Voltar">${I.back}</button><div class="t">${esc(pasta?pasta.nome:"Treino")}</div><button class="save" data-action="salvar-treino">Salvar</button></div>
   <div class="field"><label for="ed-nome">Nome do treino</label><input id="ed-nome" data-bind="ed-nome" value="${esc(d.nome)}" placeholder="Treino A"></div>
-  ${app.pastas.length>1?`<div class="field" style="margin-top:10px"><label for="ed-pasta">Pasta</label><select id="ed-pasta" data-action="ed-pasta">${app.pastas.map(p=>`<option value="${p.id}" ${p.id===d.pastaId?"selected":""}>${esc(p.nome)}</option>`).join("")}</select></div>`:""}
+  ${app.pastas.length>1?`<div class="field" style="margin-top:10px"><label for="ed-pasta">Ficha de treino</label><select id="ed-pasta" data-action="ed-pasta">${app.pastas.map(p=>`<option value="${p.id}" ${p.id===d.pastaId?"selected":""}>${esc(p.nome)}</option>`).join("")}</select></div>`:""}
   <div class="sec cap">Exercícios <button class="link" data-action="abrir-picker" data-modo="editor">Adicionar exercício <span style="font-size:24px">+</span></button></div>
   ${d.exercicios.length ? d.exercicios.map((e,i)=>{
     const aberto = ui.ed.aberto===i, menu = ui.ed.menu===i;
@@ -1089,19 +1240,26 @@ function relogio(){
   const t=Math.floor((Date.now()-dt(sessao.inicio).getTime())/1000), h=Math.floor(t/3600), m=Math.floor(t%3600/60), s=t%60;
   return (h?h+":":"")+String(m).padStart(h?2:1,"0")+":"+String(s).padStart(2,"0");
 }
+const exFeito = it => it.series.length>0 && it.series.every(x=>x.feito);
 function scrSessao(){
   const s = sessao;
   return `<div class="topbar"><button class="round" data-action="minimizar" aria-label="Voltar ao plano">${I.back}</button>
     <div class="t">${esc(s.fichaNome)}<div class="clock" id="clock">${relogio()}</div></div><button class="save" data-action="finalizar">Finalizar</button></div>
-  ${s.itens.map((it,ei)=>`<section class="live">
-    <div class="hd">${thumb(it.nome,it.grupo)}<div class="nm">${esc(it.nome)}${it.nota?`<div class="muted small">${esc(it.nota)}</div>`:""}</div><button class="info-btn" data-action="ver-ex" data-nome="${esc(it.nome)}" aria-label="Como fazer ${esc(it.nome)}">ⓘ</button></div>
-    <div class="lhead"><span style="text-align:center">Set</span><span>Anterior</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span></span></div>
+  <div class="mini locbar"><label for="s-local">📍 Local</label><input id="s-local" data-sloc="1" list="dl-locais" value="${esc(s.local||"")}" placeholder="Onde você está treinando?" autocomplete="off" enterkeyhint="done"></div>${dlLocais()}
+  ${(()=>{ const tot=s.itens.length, ok=s.itens.filter(exFeito).length, algumAberto=s.itens.some(i=>!i.recolhido);
+    return `<div class="sessbar"><span class="muted">${ok} de ${tot} exercícios concluídos</span><button class="linkbtn" data-action="recolher-todos">${algumAberto?"Recolher todos":"Expandir todos"}</button></div>`; })()}
+  ${s.itens.map((it,ei)=>{ const feitos=it.series.filter(x=>x.feito).length, fim=exFeito(it), rec=!!it.recolhido;
+    const kgs=it.series.filter(x=>x.feito).map(x=>num(x.kg)).filter(v=>v!=null);
+    const resumo = `${feitos}/${it.series.length} sets${kgs.length?` • ${fmt(Math.max(...kgs))} kg`:""}`;
+    return `<section class="live${rec?" rec":""}${fim?" fim":""}">
+    <div class="hd">${thumb(it.nome,it.grupo)}<button class="nm hdbtn" data-action="toggle-live" data-ei="${ei}" aria-expanded="${!rec}"><span class="nmtx">${esc(it.nome)}</span>${rec?`<span class="resumo">${fim?"✓ ":""}${esc(resumo)}</span>`:it.nota?`<span class="muted small" style="display:block">${esc(it.nota)}</span>`:""}</button>${rec?"":`<button class="info-btn" data-action="ver-ex" data-nome="${esc(it.nome)}" aria-label="Como fazer ${esc(it.nome)}">ⓘ</button>`}<button class="chev" data-action="toggle-live" data-ei="${ei}" aria-label="${rec?"Expandir":"Recolher"} ${esc(it.nome)}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="${rec?"M6 9l6 6 6-6":"M6 15l6-6 6 6"}"/></svg></button></div>
+    ${rec?"":`<div class="lhead"><span style="text-align:center">Set</span><span>Anterior</span><span style="text-align:center">Kg</span><span style="text-align:center">Reps</span><span></span></div>
     ${it.series.map((x,si)=>{ const p = it.anterior && it.anterior[si]; return `<div class="lrow ${x.feito?"done":""}">
       <span class="n">${si+1}</span><span class="prev">${p?esc((num(p.kg)!=null?fmt(num(p.kg))+" kg × ":"")+(p.reps||"")):"–"}</span>
       <input inputmode="decimal" data-s="${ei}:${si}" data-k="kg" value="${esc(x.kg)}" placeholder="${esc(x.alvoKg||"0")}" aria-label="Kg set ${si+1}">
       <input inputmode="numeric" data-s="${ei}:${si}" data-k="reps" value="${esc(x.reps)}" placeholder="${esc(x.alvoReps||"0")}" aria-label="Reps set ${si+1}">
       <button class="ck" data-action="check" data-s="${ei}:${si}" aria-pressed="${!!x.feito}" aria-label="Set ${si+1} feito">✓</button></div>`; }).join("")}
-    <button class="addset" data-action="add-serie" data-ei="${ei}"><span class="pl">+</span>Adicionar set</button></section>`).join("")}
+    <button class="addset" data-action="add-serie" data-ei="${ei}"><span class="pl">+</span>Adicionar set</button>`}</section>`; }).join("")}
   <button class="btn" data-action="abrir-picker" data-modo="sessao"><span style="font-family:var(--body);font-weight:400;font-size:26px">+</span> Adicionar exercício</button>
   <button class="btn green" data-action="finalizar">Finalizar treino</button>
   <button class="btn danger" data-action="descartar">${ui.armed==="descartar"?"Toque de novo para descartar":"Descartar treino"}</button>`;
@@ -1117,6 +1275,7 @@ function scrResumo(){
     <div class="t">${ui.novo?"":esc(dataNum(s.data))}</div><span style="width:52px"></span></div>
   <div class="hero"><h2>${ui.novo?"Bom trabalho! 🎉":esc(s.fichaNome)}</h2><p>Este é seu ${n}º treino</p></div>
   <div class="sumcard${foto?" foto":""}"${foto?` style="background-image:linear-gradient(180deg,rgba(3,22,28,0) 40%,rgba(3,22,28,.85) 100%),url('${foto}')"`:""}><div class="brand"><svg width="22" height="14" viewBox="0 0 22 14" aria-hidden="true"><rect x="0" y="3" width="3.5" height="8" rx="1.2" fill="currentColor"/><rect x="4.5" y="0.5" width="3.5" height="13" rx="1.2" fill="currentColor"/><rect x="8" y="5.8" width="6" height="2.4" rx="1" fill="currentColor"/><rect x="14" y="0.5" width="3.5" height="13" rx="1.2" fill="currentColor"/><rect x="18.5" y="3" width="3.5" height="8" rx="1.2" fill="currentColor"/></svg>RB Fit<span style="color:var(--ink);font-family:var(--body);font-weight:500;font-size:15px;margin-left:8px">${esc(s.fichaNome)}</span></div>
+    ${s.local?`<div class="sumloc">${pin(s.local)}</div>`:""}
     <div class="stats big">
       <div class="stat"><div class="l">Tempo</div><div class="v">${dur(s)}MIN</div></div>
       <div class="stat"><div class="l">Recordes</div><div class="v">${s.recordes||0} 🏆</div></div>
@@ -1126,6 +1285,7 @@ function scrResumo(){
     </div></div>
   ${foto ? `<div class="fotobtns"><label class="btn">Trocar foto<input type="file" accept="image/*" data-foto="${s.id}"></label><button class="btn danger" data-action="rm-foto" data-id="${s.id}">${ui.armed==="f:"+s.id?"Toque de novo":"Remover"}</button></div>`
     : `<label class="btn green">📷 Adicionar foto do treino<input type="file" accept="image/*" data-foto="${s.id}"></label>`}
+  <div class="mini" style="margin-top:14px"><label for="r-local">📍 Local</label><input id="r-local" data-rloc="${s.id}" list="dl-locais" value="${esc(s.local||"")}" placeholder="Adicionar local" autocomplete="off" enterkeyhint="done"></div>${dlLocais()}
   ${ui.novo && ficha ? `<button class="btn" data-action="atualizar-ficha">Atualizar treino com as cargas de hoje</button>` : ""}
   <div class="sec cap">${s.itens.length} exercícios</div>
   ${s.itens.map(it=>`<div class="ex" style="align-items:flex-start">${thumb(it.nome,it.grupo||grupoDe(it.nome))}<div class="info"><button class="nm" style="text-align:left" data-action="ver-ex" data-nome="${esc(it.nome)}">${esc(it.nome)}</button>
@@ -1170,14 +1330,14 @@ const EQDRAW = (function(){
   /* pilha de pesos com guias cromadas e pino rosa */
   function stack(x,top,w=44,n=14){ let s=rod(x+8,top-6,x+8,G-6,4)+rod(x+w-8,top-6,x+w-8,G-6,4); const bh=Math.min(8,(G-10-top-40)/n);
     for(let i=0;i<n;i++){ const y=G-10-(i+1)*bh; s+=`<rect x="${F(x)}" y="${F(y)}" width="${w}" height="${F(bh-1)}" rx="1.5" fill="url(#eqPlate)" stroke="#07080A" stroke-width=".8"/>`; }
-    const py=G-10-Math.round(n*.45)*bh-bh/2; s+=`<circle cx="${F(x+w+4)}" cy="${F(py)}" r="3.4" fill="#FF5CA8" stroke="#8F2458"/>`+L(x+w-2,py,x+w+3,py,"#C9CED3",2);
+    const py=G-10-Math.round(n*.45)*bh-bh/2; s+=`<circle cx="${F(x+w+4)}" cy="${F(py)}" r="3.4" fill="#FF2E9A" stroke="#9B0E5A"/>`+L(x+w-2,py,x+w+3,py,"#C9CED3",2);
     s+=`<rect x="${F(x-2)}" y="${F(G-10-n*bh-7)}" width="${w+4}" height="6" rx="2" fill="#1A1D21"/>`; return s; }
   /* torre da pilha: coluna com capa */
   function tower(x,top,w=60){ return tube(x,G,x,top,12)+tube(x+w,G,x+w,top,12)+tube(x-4,top,x+w+4,top,12)+tube(x-14,G-2,x+w+14,G-2,10)+stack(x+8,top+18,w-16); }
   const shadow=(cx,w)=>`<ellipse cx="${F(cx)}" cy="${G+6}" rx="${F(w/2)}" ry="9" fill="url(#eqShadow)"/>`;
   const feet=(x1,x2)=>tube(x1,G-2,x2,G-2,11)+`<rect x="${F(x1-9)}" y="${G-6}" width="14" height="10" rx="3" fill="#0B0C0E"/><rect x="${F(x2-5)}" y="${G-6}" width="14" height="10" rx="3" fill="#0B0C0E"/>`;
   const grip=(x,y,ang=0,len=18)=>`<g transform="rotate(${ang} ${F(x)} ${F(y)})"><rect x="${F(x-4)}" y="${F(y-len/2)}" width="8" height="${len}" rx="4" fill="#15171A" stroke="#050607"/><line x1="${F(x-1.5)}" y1="${F(y-len/2+3)}" x2="${F(x-1.5)}" y2="${F(y+len/2-3)}" stroke="#4B5159" stroke-width="1.2"/></g>`;
-  const pin=(x,y)=>`<circle cx="${F(x)}" cy="${F(y)}" r="4" fill="#FF5CA8" stroke="#8F2458"/>`;
+  const pin=(x,y)=>`<circle cx="${F(x)}" cy="${F(y)}" r="4" fill="#FF2E9A" stroke="#9B0E5A"/>`;
   /* assento padrão com encosto */
   function cadeira(x,y,encAng=-100,encLen=110,assento=72){ const bx=x-assento/2+6, e2=[bx+Math.cos(encAng*Math.PI/180)*encLen, y+Math.sin(encAng*Math.PI/180)*encLen];
     return tube(x,G-2,x,y+8,13)+tube(bx,y+6,e2[0]+4,e2[1]+14,9)+pad(x,y,assento,17,0)+pad((bx+e2[0])/2-8,(y+e2[1])/2-2,encLen,18,encAng,8); }
@@ -1409,15 +1569,78 @@ function scrGithub(){
   <button class="btn" data-action="backup-exportar">Baixar backup (.json)</button>
   <label class="btn">Restaurar backup<input type="file" accept="application/json,.json" data-backup="1"></label>`;
 }
+function scrAtividade(){
+  const f = ui.at, sel = tipoAtiv(f.tipo);
+  return `<div class="topbar"><button class="round" data-action="fechar-ativ" aria-label="Voltar">${I.back}</button><div class="t">${f.id?"Editar atividade":"Nova atividade"}</div><button class="save" data-action="salvar-ativ">Salvar</button></div>
+  <div class="sec cap" style="margin-top:4px">Atividade</div>
+  <div class="tipos">${tiposAtiv().map(t=>`<button class="tipo" style="--c:${t.cor}" data-action="at-tipo" data-t="${t.id}" aria-pressed="${f.tipo===t.id}"><span class="em">${t.emoji}</span>${esc(t.nome)}</button>`).join("")}
+    <button class="tipo" style="--c:${COR_OUTRA}" data-action="at-outra" aria-pressed="${!!f.novoTipo}"><span class="em">＋</span>Outra</button></div>
+  ${f.novoTipo?`<div class="mini" style="margin-top:10px"><label for="at-novo">Nome da nova atividade</label><input id="at-novo" placeholder="Ex.: Corrida, Vôlei, Pilates" autocomplete="off"></div>
+    <button class="btn" data-action="at-criar-tipo">Adicionar à lista</button>`:""}
+  <div class="grid2" style="margin-top:18px">
+    <div class="mini"><label for="at-dia">Data</label><input id="at-dia" type="date" data-at="dia" value="${esc(f.dia)}"></div>
+    <div class="mini"><label for="at-hora">Início</label><input id="at-hora" type="time" data-at="hora" value="${esc(f.hora)}"></div>
+  </div>
+  <div class="sec cap">Local</div>
+  <div class="mini"><label for="at-local">Onde foi</label><input id="at-local" data-at="local" value="${esc(f.local||"")}" placeholder="Ex.: arena, clube, quadra" autocomplete="off" enterkeyhint="done"></div>
+  ${(()=>{ const rec = locaisRecentes(f.tipo); return rec.length ? `<div class="chips" style="margin-top:10px">${rec.map(l=>`<button class="chip sm g" data-action="at-local" data-v="${esc(l)}" aria-pressed="${(f.local||"").trim()===l}">📍 ${esc(l)}</button>`).join("")}</div>` : ""; })()}
+  <div class="sec cap">Duração</div>
+  <div class="chips">${[30,45,60,90,120].map(m=>`<button class="chip sm g" data-action="at-dur" data-v="${m}" aria-pressed="${+f.dur===m}">${fmtDur(m)}</button>`).join("")}</div>
+  <div class="mini" style="margin-top:10px"><label for="at-durn">Ou digite os minutos</label><input id="at-durn" inputmode="numeric" data-at="dur" value="${esc(f.dur)}"></div>
+  <div class="sec cap">Intensidade <span class="muted small" style="font-family:var(--body);text-transform:none;font-weight:400">opcional</span></div>
+  <div class="chips">${Object.entries(INTENS).map(([k,l])=>`<button class="chip sm g" data-action="at-int" data-v="${k}" aria-pressed="${f.intens===k}">${l}</button>`).join("")}</div>
+  <div class="mini" style="margin-top:16px"><label for="at-nota">Observação</label><input id="at-nota" data-at="nota" value="${esc(f.nota)}" placeholder="Ex.: jogo de duplas, aula, campeonato"></div>
+  <button class="btn green" data-action="salvar-ativ">${f.id?"Salvar alterações":`Registrar ${esc(sel.nome||"atividade")}`}</button>
+  ${f.id?`<button class="btn danger" data-action="excluir-ativ">${ui.armed==="at"?"Toque de novo para excluir":"Excluir atividade"}</button>`:""}`;
+}
+function scrAtivResumo(){
+  const a = atividades.find(x=>x.id===ui.ativId); if(!a){ ui.screen=null; return render(); }
+  const t = tipoAtiv(a.tipo);
+  const n = atividades.filter(x=>x.tipo===a.tipo).sort((x,y)=>x.data.localeCompare(y.data)).findIndex(x=>x.id===a.id)+1;
+  if(!(a.id in fotos)) carregarFoto(a.id).then(()=>{ if(ui.screen==="ativResumo" && ui.ativId===a.id && fotos[a.id]) render(); });
+  const foto = fotos[a.id];
+  return `<div class="topbar"><button class="round" data-action="fechar-ativresumo" aria-label="Fechar">${I.close}</button>
+    <div class="t">${ui.ativNova?"":esc(dataNum(a.data))}</div><span style="width:52px"></span></div>
+  <div class="hero"><h2>${ui.ativNova?`Boa! ${t.emoji}`:`${t.emoji} ${esc(t.nome)}`}</h2><p>${ui.ativNova?`Este é seu ${n}º registro de ${esc(t.nome)}`:esc(nomeDia(diaKey(a.data)))}</p></div>
+  <div class="sumcard${foto?" foto":""}" data-fid="${a.id}"${foto?` style="background-image:linear-gradient(180deg,rgba(3,22,28,0) 40%,rgba(3,22,28,.85) 100%),url('${foto}')"`:""}><div class="brand"><svg width="22" height="14" viewBox="0 0 22 14" aria-hidden="true"><rect x="0" y="3" width="3.5" height="8" rx="1.2" fill="currentColor"/><rect x="4.5" y="0.5" width="3.5" height="13" rx="1.2" fill="currentColor"/><rect x="8" y="5.8" width="6" height="2.4" rx="1" fill="currentColor"/><rect x="14" y="0.5" width="3.5" height="13" rx="1.2" fill="currentColor"/><rect x="18.5" y="3" width="3.5" height="8" rx="1.2" fill="currentColor"/></svg>RB Fit<span style="color:var(--ink);font-family:var(--body);font-weight:500;font-size:15px;margin-left:8px">${esc(t.nome)}</span></div>
+    ${a.local?`<div class="sumloc">${pin(a.local)}</div>`:""}
+    <div class="stats big">
+      <div class="stat"><div class="l">Tempo</div><div class="v">${fmtDur(a.dur).toUpperCase()}</div></div>
+      <div class="stat"><div class="l">Horário</div><div class="v">${hora(a.data)}</div></div>
+      <div class="stat"><div class="l">Intensidade</div><div class="v" style="font-size:24px">${a.intens?INTENS[a.intens].toUpperCase():"—"}</div></div>
+    </div>${a.nota?`<div class="sumnota">${esc(a.nota)}</div>`:""}</div>
+  ${foto ? `<div class="fotobtns"><label class="btn">Trocar foto<input type="file" accept="image/*" data-foto="${a.id}"></label><button class="btn danger" data-action="rm-foto" data-id="${a.id}">${ui.armed==="f:"+a.id?"Toque de novo":"Remover"}</button></div>`
+    : `<label class="btn green">📷 Adicionar foto${t.id==="futevolei"||t.id==="tenis"||t.id==="beach"?" do jogo":""}<input type="file" accept="image/*" data-foto="${a.id}"></label>`}
+  <button class="btn" data-action="editar-ativ" data-id="${a.id}">Editar atividade</button>
+  <button class="btn" data-action="fechar-ativresumo">Ver no calendário</button>`;
+}
+function abrirAtiv(a, dia){
+  if(a){ const d = dt(a.data); ui.at = {id:a.id, tipo:a.tipo, dia:diaKey(d), hora:`${p2(d.getHours())}:${p2(d.getMinutes())}`, dur:String(a.dur||""), intens:a.intens||"", nota:a.nota||"", local:a.local||""}; }
+  else {
+    const hojeK = diaKey(new Date()); dia = dia || hojeK;
+    let hr = "18:00";
+    if(dia===hojeK){ const x = new Date(Date.now()-60*60000); x.setMinutes(Math.floor(x.getMinutes()/15)*15); hr = `${p2(x.getHours())}:${p2(x.getMinutes())}`; }
+    const ultima = [...atividades].sort((x,y)=>y.data.localeCompare(x.data))[0];
+    const tp = ultima?ultima.tipo:"tenis";
+    ui.at = {id:null, tipo:tp, dia, hora:hr, dur:"60", intens:"", nota:"", local:ultimoLocal(tp), localAuto:true};
+  }
+  ui.atVolta = {screen:ui.screen, tab:ui.tab}; tela("ativ");
+}
+function prepDia(key){
+  const n = new Date(), d = dt(key);
+  ui.tab = "treinos"; ui.per = "cal"; ui.calDia = key;
+  ui.off = (d.getFullYear()-n.getFullYear())*12 + (d.getMonth()-n.getMonth());
+}
+function irParaDia(key){ prepDia(key); ui.screen = null; render(); window.scrollTo(0,0); }
 /* ---------- Render ---------- */
 function render(){
   const sc = ui.screen;
-  const html = sc==="github"?scrGithub() : sc==="editor"?scrEditor() : sc==="picker"?scrPicker() : sc==="sessao"&&sessao?scrSessao() : sc==="resumo"?scrResumo()
+  const html = sc==="ativResumo"?scrAtivResumo() : sc==="ativ"&&ui.at?scrAtividade() : sc==="github"?scrGithub() : sc==="editor"?scrEditor() : sc==="picker"?scrPicker() : sc==="sessao"&&sessao?scrSessao() : sc==="resumo"?scrResumo()
     : sc==="exercicio"?scrExercicio() : sc==="medidas"?scrMedidas()
     : ui.tab==="treinos"?telaTreinos() : ui.tab==="progresso"?telaProgresso() : ui.tab==="exercicios"?telaExercicios() : ui.tab==="perfil"?telaPerfil() : telaPlano();
   if(html===undefined) return;
   $app.innerHTML = html;
-  const cheio = !!sc && sc!=="medidas" && sc!=="exercicio" && sc!=="resumo" && sc!=="github";
+  const cheio = !!sc && sc!=="medidas" && sc!=="exercicio" && sc!=="resumo" && sc!=="ativResumo" && sc!=="github";
   $nav.classList.toggle("hidden", cheio); $app.classList.toggle("full", cheio);
   $nav.querySelectorAll("button").forEach(b=>b.setAttribute("aria-current", !sc && b.dataset.tab===ui.tab ? "page":"false"));
 }
@@ -1435,7 +1658,7 @@ function novoItemSessao(nome, grupo, series, nota){
     series: base.map((t,i)=>{ const p = ant && ant.series[i]; return {kg: p ? p.kg : t.kg, reps: p ? p.reps : t.reps, alvoKg:t.kg, alvoReps:t.reps, feito:false}; })};
 }
 function iniciar(f){
-  sessao = {id:uid(), fichaId:f.id, fichaNome:f.nome, inicio:new Date().toISOString(), itens:f.exercicios.map(e=>novoItemSessao(e.nome, e.grupo, e.series, e.nota))};
+  sessao = {id:uid(), fichaId:f.id, fichaNome:f.nome, local:ultimoLocal("musc"), inicio:new Date().toISOString(), itens:f.exercicios.map(e=>novoItemSessao(e.nome, e.grupo, e.series, e.nota))};
   saveDraft(); tela("sessao");
 }
 async function finalizar(){
@@ -1450,7 +1673,7 @@ async function finalizar(){
     return {nome:it.nome, grupo:it.grupo, series};
   }).filter(Boolean);
   if(!itens.length){ toast("Marque ao menos um set como feito."); return; }
-  const reg = {id:sessao.id, fichaId:sessao.fichaId, fichaNome:sessao.fichaNome, data:sessao.inicio, fim:agora, itens, recordes:rec};
+  const reg = {id:sessao.id, fichaId:sessao.fichaId, fichaNome:sessao.fichaNome, local:(sessao.local||"").trim(), data:sessao.inicio, fim:agora, itens, recordes:rec};
   sessoes.push(reg); sessao=null; saveDraft();
   ui.resumoId = reg.id; ui.novo = true; tela("resumo");
   await salvarSessao(reg);
@@ -1483,15 +1706,20 @@ document.addEventListener("click", async e=>{
   if(ze){ const nome = ze.dataset.zoomEq, minha = imgs["aparelhos/"+slug(nome)] || (fotoCommonsEscolhida(nome)||{}).url;
     abrirZoom(minha ? `<img src="${esc(minha)}" alt="Foto do aparelho">` : `<div class="box">${desenhoEquip(nome)}</div>`, nomeEquip(nome)); return; }
   const zf = e.target.closest(".sumcard.foto");
-  if(zf && fotos[ui.resumoId]){ abrirZoom(`<img src="${fotos[ui.resumoId]}" alt="Foto do treino">`, ""); return; }
+  if(zf){ const fid = zf.dataset.fid || ui.resumoId; if(fotos[fid]){ abrirZoom(`<img src="${fotos[fid]}" alt="Foto">`, ""); return; } }
   const t = e.target.closest("nav.tabs button");
   if(t){ ui.tab=t.dataset.tab; ui.screen=null; ui.armed=null; ui.pastaMenu=false; render(); window.scrollTo(0,0); return; }
   const el = e.target.closest("[data-action]"); if(!el || el.tagName==="SELECT" || el.disabled) return;
   const a = el.dataset.action, d = el.dataset;
   switch(a){
     case "pasta": if(ui.pasta===d.id) ui.pastaMenu=!ui.pastaMenu; else { ui.pasta=d.id; ui.pastaMenu=false; } ui.armed=null; render(); break;
-    case "nova-pasta": { const p={id:uid(), nome:`Rotina ${app.pastas.length+1}`}; app.pastas.push(p); ui.pasta=p.id; ui.pastaMenu=true; render(); document.getElementById("pasta-nome")?.select(); await salvarApp(); break; }
-    case "salvar-pasta": { const v=document.getElementById("pasta-nome").value.trim(); if(v){ app.pastas.find(p=>p.id===ui.pasta).nome=v; } ui.pastaMenu=false; render(); await salvarApp(); break; }
+    case "nova-pasta": { const p={id:uid(), nome:`Ficha ${app.pastas.length+1}`, inicio:diaKey(new Date()), fim:""}; app.pastas.push(p); ui.pasta=p.id; ui.pastaMenu=true; render(); document.getElementById("pasta-nome")?.select(); await salvarApp(); break; }
+    case "salvar-pasta": { const ps=app.pastas.find(p=>p.id===ui.pasta), v=document.getElementById("pasta-nome").value.trim();
+      const ini=document.getElementById("pasta-ini").value, fim=document.getElementById("pasta-fim").value;
+      if(ini && fim && fim<ini){ toast("O término precisa ser depois do início."); return; }
+      if(v) ps.nome=v; ps.inicio=ini||""; ps.fim=fim||""; ui.pastaMenu=false; render(); toast("Ficha salva"); await salvarApp(); break; }
+    case "pasta-semanas": { const ie=document.getElementById("pasta-ini"), fe=document.getElementById("pasta-fim"); if(!ie.value) ie.value=diaKey(new Date());
+      const f=dt(ie.value); f.setDate(f.getDate()+(+d.s)*7-1); fe.value=diaKey(f); break; }
     case "excluir-pasta": { if(!armar("pasta")) return; const outra=app.pastas.find(p=>p.id!==ui.pasta);
       app.fichas.forEach(f=>{ if(f.pastaId===ui.pasta) f.pastaId=outra.id; }); app.pastas=app.pastas.filter(p=>p.id!==ui.pasta); ui.pasta=outra.id; ui.pastaMenu=false; render(); toast(`Treinos movidos para ${outra.nome}`); await salvarApp(); break; }
     case "novo-treino": abrirEditor(null); break;
@@ -1548,7 +1776,7 @@ document.addEventListener("click", async e=>{
       }catch(err){ el.disabled=false; el.textContent="Testar e salvar"; toast(err.message||"Não consegui conectar."); }
       break; }
     case "backup-exportar": {
-      const blob = new Blob([JSON.stringify({v:2, app, sessoes, medidas, apagados}, null, 1)], {type:"application/json"});
+      const blob = new Blob([JSON.stringify({v:2, app, sessoes, medidas, atividades, apagados}, null, 1)], {type:"application/json"});
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `meu-treino-backup-${hoje()}.json`; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1000); break; }
     case "rm-aparelho": { const sid=slug(ui.exNome); if(!armar("ap:"+sid)) return; await salvarImg("aparelhos", sid, null); render(); break; }
     case "demo-modo": ui.visual = (ui.visual||0)+1; render(); break;
@@ -1556,10 +1784,38 @@ document.addEventListener("click", async e=>{
     case "fechar-ex": { ui.screen=ui.exVolta||null; render(); const y=ui.exScroll||0; requestAnimationFrame(()=>window.scrollTo(0,y)); break; }
     case "check": { const [ei,si]=d.s.split(":").map(Number); const x=sessao.itens[ei].series[si];
       if(!x.feito){ if(x.kg==="") x.kg=x.alvoKg||""; if(x.reps==="") x.reps=x.alvoReps||""; }
-      x.feito=!x.feito; saveDraft(); render(); break; }
+      x.feito=!x.feito; const itx=sessao.itens[ei];
+      if(x.feito && exFeito(itx)){ itx.recolhido=true; saveDraft(); render(); const prox=sessao.itens.findIndex((i,j)=>j>ei && !exFeito(i)); const alvo=document.querySelectorAll("section.live")[prox>=0?prox:ei]; if(alvo) alvo.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth", block:"start"}); }
+      else { saveDraft(); render(); } break; }
+    case "toggle-live": { const it=sessao.itens[+d.ei]; it.recolhido=!it.recolhido; saveDraft(); render(); break; }
+    case "recolher-todos": { const abrir=!sessao.itens.some(i=>!i.recolhido); sessao.itens.forEach(i=>i.recolhido=!abrir); saveDraft(); render(); break; }
     case "add-serie": { const it=sessao.itens[+d.ei]; const p=it.series[it.series.length-1]; it.series.push({kg:p?p.kg:"", reps:p?p.reps:"", alvoKg:p?p.alvoKg:"", alvoReps:p?p.alvoReps:"", feito:false}); saveDraft(); render(); break; }
     case "finalizar": await finalizar(); break;
     case "descartar": if(!armar("descartar")) return; sessao=null; saveDraft(); ui.screen=null; ui.tab="plano"; render(); toast("Treino descartado"); break;
+    case "ver-ativ": ui.ativId = d.id; ui.ativNova = false; tela("ativResumo"); break;
+    case "fechar-ativresumo": { const a = atividades.find(x=>x.id===ui.ativId); ui.ativNova = false; if(a) irParaDia(diaKey(a.data)); else { ui.screen=null; render(); } break; }
+    case "cal-dia": ui.calDia = ui.calDia===d.dia ? null : d.dia; render(); break;
+    case "nova-ativ": abrirAtiv(null, d.dia || (ui.tab==="treinos" && ui.per==="cal" ? ui.calDia : null)); break;
+    case "editar-ativ": { const a = atividades.find(x=>x.id===d.id); if(a) abrirAtiv(a); break; }
+    case "fechar-ativ": ui.screen = ui.atVolta ? ui.atVolta.screen : null; ui.at = null; render(); window.scrollTo(0,0); break;
+    case "at-tipo": ui.at.tipo = d.t; ui.at.novoTipo = false; if(!ui.at.id && (ui.at.localAuto || !ui.at.local)){ ui.at.local = ultimoLocal(d.t); ui.at.localAuto = true; } render(); break;
+    case "at-local": ui.at.local = d.v; ui.at.localAuto = false; render(); break;
+    case "at-outra": ui.at.novoTipo = !ui.at.novoTipo; render(); document.getElementById("at-novo")?.focus(); break;
+    case "at-criar-tipo": { const nm = (document.getElementById("at-novo").value||"").trim(); if(!nm){ toast("Digite o nome da atividade."); return; }
+      const ex = tiposAtiv().find(t=>low(t.nome)===low(nm));
+      if(ex) ui.at.tipo = ex.id; else { const t = {id:"c-"+uid(), nome:nm}; app.tiposAtiv.push(t); ui.at.tipo = t.id; salvarApp(); }
+      ui.at.novoTipo = false; render(); break; }
+    case "at-dur": ui.at.dur = d.v; render(); break;
+    case "at-int": ui.at.intens = ui.at.intens===d.v ? "" : d.v; render(); break;
+    case "salvar-ativ": { const f = ui.at, m = Math.round(num(f.dur)||0);
+      if(!f.tipo){ toast("Escolha a atividade."); return; }
+      if(!f.dia){ toast("Escolha a data."); return; }
+      if(m<=0){ toast("Informe a duração."); return; }
+      const ini = new Date(`${f.dia}T${f.hora||"12:00"}`);
+      const rec = {id:f.id||uid(), tipo:f.tipo, data:ini.toISOString(), dur:m, intens:f.intens||"", nota:(f.nota||"").trim(), local:(f.local||"").trim()};
+      if(f.id){ const i = atividades.findIndex(x=>x.id===f.id); if(i>=0) atividades[i]=rec; else atividades.push(rec); } else atividades.push(rec);
+      ui.at = null; prepDia(f.dia); ui.ativId = rec.id; ui.ativNova = !f.id; tela("ativResumo"); if(f.id) toast("Atividade atualizada"); await salvarAtividade(rec); break; }
+    case "excluir-ativ": { if(!armar("at")) return; const id = ui.at.id, dia = ui.at.dia; atividades = atividades.filter(x=>x.id!==id); ui.at = null; irParaDia(dia); toast("Atividade excluída"); await apagarAtividade(id); if(fotos[id]) await salvarFoto(id, null); break; }
     case "ver-sessao": ui.resumoId=d.id; ui.novo=false; tela("resumo"); break;
     case "rm-foto": if(!armar("f:"+d.id)) return; render(); await salvarFoto(d.id, null); render(); break;
     case "fechar-resumo": ui.screen=null; if(ui.novo){ ui.tab="plano"; } ui.novo=false; render(); break;
@@ -1585,6 +1841,8 @@ document.addEventListener("click", async e=>{
 document.addEventListener("input", e=>{
   const t=e.target, d=t.dataset;
   if(d.bind==="ed-nome") ui.ed.draft.nome=t.value;
+  else if(d.at && ui.at){ ui.at[d.at]=t.value; if(d.at==="local") ui.at.localAuto=false; }
+  else if(d.sloc && sessao){ sessao.local = t.value; saveDraft(); }
   else if(d.exn!=null) ui.ed.draft.exercicios[+d.exn].nota=t.value;
   else if(d.es){ const [i,j]=d.es.split(":").map(Number); const ex=ui.ed.draft.exercicios[i]; ex.series[j][d.k]=t.value;
     const m=t.closest(".ex-open")?.querySelector(".meta"); if(m) m.textContent=metaEx(ex); }
@@ -1593,13 +1851,14 @@ document.addEventListener("input", e=>{
   else if(d.search==="lib"){ ui.exLib.q=t.value; document.getElementById("lib-list").innerHTML=listaExercicios(ui.exLib.q,ui.exLib.g,"ver-ex"); }
 });
 document.addEventListener("change", async e=>{
+  if(e.target.dataset.rloc){ const s = sessoes.find(x=>x.id===e.target.dataset.rloc); if(s){ const v = e.target.value.trim(); if((s.local||"")!==v){ s.local = v; render(); toast(v?"Local salvo":"Local removido"); await salvarSessao(s); } } return; }
   if(e.target.dataset.backup){
     const f = e.target.files && e.target.files[0]; if(!f) return;
     try{
       const j = JSON.parse(await f.text());
       if(!j.app || !Array.isArray(j.sessoes)) throw 0;
       const porId=(a,b)=>{ const m=new Map(); for(const x of a) m.set(x.id,x); for(const x of b) m.set(x.id,x); return [...m.values()]; };
-      app = j.app; sessoes = porId(sessoes, j.sessoes); medidas = porId(medidas, j.medidas||[]); normApp(); salvarApp(); render(); toast("Backup restaurado");
+      app = j.app; sessoes = porId(sessoes, j.sessoes); medidas = porId(medidas, j.medidas||[]); atividades = porId(atividades, j.atividades||[]); normApp(); salvarApp(); render(); toast("Backup restaurado");
     }catch(err){ toast("Arquivo de backup inválido."); }
     return;
   }
