@@ -1031,7 +1031,7 @@ function telaPlano(){
     </div>` : ""}
   ${fichas.map(f=>`<div class="wk">
       <button class="h" style="width:100%;text-align:left" data-action="editar" data-id="${f.id}">
-        <div><div class="n">${esc(f.nome)}</div><div class="muted" style="margin-top:4px">${[`${f.exercicios.length} exercícios`, ultDur[f.id]?`${ultDur[f.id]}min`:""].filter(Boolean).join(" • ")}</div></div>
+        <div><div class="n">${esc(f.nome)}</div><div class="muted" style="margin-top:4px">${[`${f.exercicios.length} exercícios`, ultDur[f.id]?`${ultDur[f.id]}min`:""].filter(Boolean).join(" • ")}</div>${f.personal?`<div class="muted small" style="margin-top:3px">👤 Personal: ${esc(f.personal)}</div>`:""}</div>
         <span class="dots" aria-label="Editar treino">•••</span></button>
       ${datasTreino(f)}
       <div class="foot"><div class="tiles">${tilesGrupos([...new Set(f.exercicios.map(e=>e.grupo))])}</div>
@@ -1247,6 +1247,8 @@ function scrEditor(){
     <div class="mini"><label for="ed-fim">Término</label><input id="ed-fim" type="date" data-edd="fim" value="${esc(d.fim||"")}"></div>
   </div>
   <div class="chips" style="margin-top:10px;flex-wrap:wrap;overflow:visible">${[4,6,8,12].map(s=>`<button class="chip sm g" data-action="ed-semanas" data-s="${s}">${s} semanas</button>`).join("")}</div>
+  <div class="mini" style="margin-top:14px"><label for="ed-personal">Personal que montou o treino</label><input id="ed-personal" data-edd="personal" value="${esc(d.personal||"")}" placeholder="Nome do personal" autocomplete="off" autocapitalize="words" enterkeyhint="done"></div>
+  ${(()=>{ const ps=[...new Set(app.fichas.map(f=>(f.personal||"").trim()).filter(Boolean))]; return ps.length?`<div class="chips" style="margin-top:10px;flex-wrap:wrap;overflow:visible">${ps.map(n=>`<button class="chip sm g" data-action="ed-personal" data-v="${esc(n)}" aria-pressed="${(d.personal||"").trim()===n}">👤 ${esc(n)}</button>`).join("")}</div>`:""; })()}
   <div class="sec cap">Exercícios <button class="link" data-action="abrir-picker" data-modo="editor">Adicionar exercício <span style="font-size:24px">+</span></button></div>
   ${d.exercicios.length ? d.exercicios.map((e,i)=>{
     const aberto = ui.ed.aberto===i, menu = ui.ed.menu===i;
@@ -1795,9 +1797,11 @@ document.addEventListener("click", async e=>{
     case "rm-ex": ui.ed.draft.exercicios.splice(+d.i,1); ui.ed.menu=null; ui.ed.aberto=null; render(); break;
     case "add-set": { const s=ui.ed.draft.exercicios[+d.i].series; const p=s[s.length-1]; s.push({reps:p?p.reps:"",kg:p?p.kg:""}); render(); break; }
     case "rm-set": ui.ed.draft.exercicios[+d.i].series.splice(+d.j,1); render(); break;
+    case "ed-personal": ui.ed.draft.personal = d.v; render(); break;
     case "ed-semanas": { const dr=ui.ed.draft; if(!dr.inicio) dr.inicio=diaKey(new Date()); const x=dt(dr.inicio); x.setDate(x.getDate()+(+d.s)*7-1); dr.fim=diaKey(x); render(); break; }
     case "salvar-treino": { const dr=ui.ed.draft; dr.nome=dr.nome.trim();
       if(!dr.nome){ toast("Dê um nome ao treino."); return; }
+      dr.personal = (dr.personal||"").trim();
       if(dr.inicio && dr.fim && dr.fim<dr.inicio){ toast("O término precisa ser depois do início."); return; } if(!dr.exercicios.length){ toast("Adicione pelo menos um exercício."); return; }
       dr.exercicios.forEach(x=>{ x.series = x.series.length ? x.series : [{reps:"",kg:""}]; });
       if(ui.ed.id){ const i=app.fichas.findIndex(f=>f.id===ui.ed.id); app.fichas[i]=dr; } else { dr.id=uid(); app.fichas.push(dr); }
