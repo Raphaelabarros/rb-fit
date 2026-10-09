@@ -197,6 +197,7 @@ nav.tabs button[aria-current="page"] svg{filter:drop-shadow(0 0 6px rgba(255,46,
 .cal .day.hoje .dn{box-shadow:inset 0 0 0 2px var(--green),0 0 12px rgba(255,46,154,.55)}
 .fprog{height:6px;border-radius:3px;background:var(--card2);overflow:hidden;margin-top:10px}
 .fprog i{display:block;height:100%;background:var(--green);border-radius:3px;box-shadow:0 0 10px rgba(255,46,154,.8)}
+.emj{width:1.18em;height:1.18em;display:inline-block;vertical-align:-.2em}
 .wkdatas{display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin-top:14px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.035)}
 .wkdatas .grow{flex:1;min-width:0}
 .wkdatas .d1{display:block;font-size:15px;font-weight:500}
@@ -1087,7 +1088,10 @@ function bannerSessao(){
 /* ---------- Atividades (tênis, beach tênis, futevôlei...) ---------- */
 const ATIV_BASE = [{id:"tenis",nome:"Tênis",emoji:"🎾",cor:"#C8F04B"},{id:"beach",nome:"Beach tênis",emoji:"🏖️",cor:"#F2C14E"},{id:"futevolei",nome:"Futevôlei",emoji:"⚽",cor:"#58C4F0"},{id:"spinning",nome:"Spinning",emoji:"🚴",cor:"#FF8A3D"}];
 const COR_MUSC = "#FF2E9A", COR_OUTRA = "#B79CFF";
-const tiposAtiv = () => [...ATIV_BASE, ...(app.tiposAtiv||[]).map(t=>({...t, emoji:t.emoji||"🏃", cor:t.cor||COR_OUTRA}))];
+const PALETA_ATIV = ["#B79CFF","#3DE0C6","#FF6B6B","#9BE15D","#6EC1FF","#FFB86B"];
+const EMOJI_ATIV = [[/pilates|yoga|ioga|alonga/,"🧘"],[/corrida|correr|run/,"🏃"],[/caminhada|caminhar/,"🚶"],[/nata|piscina|nado/,"🏊"],[/v[oô]lei/,"🏐"],[/basquete/,"🏀"],[/futebol|fut\b/,"⚽"],[/dan[cç]a|zumba|ballet|bal[eé]/,"💃"],[/bike|ciclismo|pedal/,"🚴"],[/crossfit|funcional/,"🏋️"],[/box|luta|muay|jiu|karat|judo/,"🥊"],[/surf/,"🏄"],[/padel|squash|raquete/,"🎾"],[/trilha|escalada/,"🧗"],[/remo/,"🚣"]];
+const emojiPara = nome => { const n = low(nome).normalize("NFD").replace(/[\u0300-\u036f]/g,""); const m = EMOJI_ATIV.find(([r])=>r.test(n)); return m ? m[1] : "🏃"; };
+const tiposAtiv = () => [...ATIV_BASE, ...(app.tiposAtiv||[]).map((t,i)=>({...t, emoji:t.emoji||emojiPara(t.nome), cor:t.cor||PALETA_ATIV[i%PALETA_ATIV.length]}))];
 const tipoAtiv = id => tiposAtiv().find(t=>t.id===id) || {id, nome:"Atividade", emoji:"🏃", cor:COR_OUTRA};
 const INTENS = {leve:"Leve", moderada:"Moderada", intensa:"Intensa"};
 const p2 = n => String(n).padStart(2,"0");
@@ -1614,10 +1618,13 @@ function scrAtividade(){
   const f = ui.at, sel = tipoAtiv(f.tipo);
   return `<div class="topbar"><button class="round" data-action="fechar-ativ" aria-label="Voltar">${I.back}</button><div class="t">${f.id?"Editar atividade":"Nova atividade"}</div><button class="save" data-action="salvar-ativ">Salvar</button></div>
   <div class="sec cap" style="margin-top:4px">Atividade</div>
-  <div class="tipos">${tiposAtiv().map(t=>`<button class="tipo" style="--c:${t.cor}" data-action="at-tipo" data-t="${t.id}" aria-pressed="${f.tipo===t.id}"><span class="em">${t.emoji}</span>${esc(t.nome)}</button>`).join("")}
+  <div class="tipos">${tiposAtiv().map(t=>`<button class="tipo" style="--c:${t.cor}" data-action="at-tipo" data-t="${t.id}" aria-pressed="${f.tipo===t.id && !f.novoTipo}"><span class="em">${t.emoji}</span>${esc(t.nome)}</button>`).join("")}
     <button class="tipo" style="--c:${COR_OUTRA}" data-action="at-outra" aria-pressed="${!!f.novoTipo}"><span class="em">＋</span>Outra</button></div>
-  ${f.novoTipo?`<div class="mini" style="margin-top:10px"><label for="at-novo">Nome da nova atividade</label><input id="at-novo" placeholder="Ex.: Corrida, Vôlei, Pilates" autocomplete="off"></div>
+  ${f.novoTipo?`<div class="mini" style="margin-top:10px"><label for="at-novo">Nome da nova atividade</label><input id="at-novo" data-at="novoNome" value="${esc(f.novoNome||"")}" placeholder="Ex.: Corrida, Vôlei, Pilates" autocomplete="off" autocapitalize="words"></div>
     <button class="btn" data-action="at-criar-tipo">Adicionar à lista</button>`:""}
+  ${!f.novoTipo && String(f.tipo).startsWith("c-") ? (f.renomear
+    ? `<div class="mini" style="margin-top:10px"><label for="at-ren">Nome da atividade</label><input id="at-ren" data-at="renNome" value="${esc(f.renNome ?? sel.nome)}" autocomplete="off" autocapitalize="words" enterkeyhint="done"></div><button class="btn" data-action="at-salvar-nome">Salvar nome</button>`
+    : `<button class="linkbtn" style="margin-top:10px" data-action="at-renomear">Corrigir o nome de “${esc(sel.nome)}”</button>`) : ""}
   <div class="grid2" style="margin-top:18px">
     <div class="mini"><label for="at-dia">Data</label><input id="at-dia" type="date" data-at="dia" value="${esc(f.dia)}"></div>
     <div class="mini"><label for="at-hora">Início</label><input id="at-hora" type="time" data-at="hora" value="${esc(f.hora)}"></div>
@@ -1631,7 +1638,7 @@ function scrAtividade(){
   <div class="sec cap">Intensidade <span class="muted small" style="font-family:var(--body);text-transform:none;font-weight:400">opcional</span></div>
   <div class="chips">${Object.entries(INTENS).map(([k,l])=>`<button class="chip sm g" data-action="at-int" data-v="${k}" aria-pressed="${f.intens===k}">${l}</button>`).join("")}</div>
   <div class="mini" style="margin-top:16px"><label for="at-nota">Observação</label><input id="at-nota" data-at="nota" value="${esc(f.nota)}" placeholder="Ex.: jogo de duplas, aula, campeonato"></div>
-  <button class="btn green" data-action="salvar-ativ">${f.id?"Salvar alterações":`Registrar ${esc(sel.nome||"atividade")}`}</button>
+  <button class="btn green" data-action="salvar-ativ">${f.id?"Salvar alterações":f.novoTipo?`Registrar ${esc((f.novoNome||"").trim()||"atividade")}`:`Registrar ${esc(sel.nome||"atividade")}`}</button>
   ${f.id?`<button class="btn danger" data-action="excluir-ativ">${ui.armed==="at"?"Toque de novo para excluir":"Excluir atividade"}</button>`:""}`;
 }
 function scrAtivResumo(){
@@ -1676,6 +1683,11 @@ function scrRetro(){
   ${recs.length?`<div class="chips" style="margin-top:10px;flex-wrap:wrap;overflow:visible">${recs.map(l=>`<button class="chip sm g" data-action="rt-local" data-v="${esc(l)}" aria-pressed="${(r.local||"").trim()===l}">📍 ${esc(l)}</button>`).join("")}</div>`:""}
   <button class="btn green" data-action="rt-continuar">Continuar para os exercícios</button>
   <p class="muted small" style="margin:10px 2px 0">Os exercícios já vêm marcados como feitos, com as cargas do treino. É só ajustar o que foi diferente e finalizar.</p>`;
+}
+function criarTipoAtiv(nm){
+  const ex = tiposAtiv().find(t=>low(t.nome)===low(nm));
+  if(ex) return ex.id;
+  const t = {id:"c-"+uid(), nome:nm}; app.tiposAtiv.push(t); salvarApp(); return t.id;
 }
 function abrirAtiv(a, dia){
   if(a){ const d = dt(a.data); ui.at = {id:a.id, tipo:a.tipo, dia:diaKey(d), hora:`${p2(d.getHours())}:${p2(d.getMinutes())}`, dur:String(a.dur||""), intens:a.intens||"", nota:a.nota||"", local:a.local||""}; }
@@ -1882,16 +1894,22 @@ document.addEventListener("click", async e=>{
     case "nova-ativ": abrirAtiv(null, d.dia || (ui.tab==="treinos" && ui.per==="cal" ? ui.calDia : null)); break;
     case "editar-ativ": { const a = atividades.find(x=>x.id===d.id); if(a) abrirAtiv(a); break; }
     case "fechar-ativ": ui.screen = ui.atVolta ? ui.atVolta.screen : null; ui.at = null; render(); window.scrollTo(0,0); break;
-    case "at-tipo": ui.at.tipo = d.t; ui.at.novoTipo = false; if(!ui.at.id && (ui.at.localAuto || !ui.at.local)){ ui.at.local = ultimoLocal(d.t); ui.at.localAuto = true; } render(); break;
+    case "at-tipo": ui.at.tipo = d.t; ui.at.novoTipo = false; ui.at.novoNome = ""; ui.at.renomear = false; if(!ui.at.id && (ui.at.localAuto || !ui.at.local)){ ui.at.local = ultimoLocal(d.t); ui.at.localAuto = true; } render(); break;
     case "at-local": ui.at.local = d.v; ui.at.localAuto = false; render(); break;
     case "at-outra": ui.at.novoTipo = !ui.at.novoTipo; render(); document.getElementById("at-novo")?.focus(); break;
-    case "at-criar-tipo": { const nm = (document.getElementById("at-novo").value||"").trim(); if(!nm){ toast("Digite o nome da atividade."); return; }
-      const ex = tiposAtiv().find(t=>low(t.nome)===low(nm));
-      if(ex) ui.at.tipo = ex.id; else { const t = {id:"c-"+uid(), nome:nm}; app.tiposAtiv.push(t); ui.at.tipo = t.id; salvarApp(); }
-      ui.at.novoTipo = false; render(); break; }
+    case "at-criar-tipo": { const nm = (ui.at.novoNome || document.getElementById("at-novo").value || "").trim(); if(!nm){ toast("Digite o nome da atividade."); return; }
+      ui.at.tipo = criarTipoAtiv(nm); ui.at.novoTipo = false; ui.at.novoNome = ""; render(); break; }
+    case "at-renomear": ui.at.renomear = true; ui.at.renNome = tipoAtiv(ui.at.tipo).nome; render(); document.getElementById("at-ren")?.focus(); break;
+    case "at-salvar-nome": { const nm = (ui.at.renNome||"").trim(); if(!nm){ toast("Digite o nome da atividade."); return; }
+      if(tiposAtiv().some(t=>t.id!==ui.at.tipo && low(t.nome)===low(nm))){ toast("Já existe uma atividade com esse nome."); return; }
+      const t = (app.tiposAtiv||[]).find(x=>x.id===ui.at.tipo); if(!t) return;
+      t.nome = nm; ui.at.renomear = false; render(); toast("Nome corrigido"); await salvarApp(); break; }
     case "at-dur": ui.at.dur = d.v; render(); break;
     case "at-int": ui.at.intens = ui.at.intens===d.v ? "" : d.v; render(); break;
     case "salvar-ativ": { const f = ui.at, m = Math.round(num(f.dur)||0);
+      if(f.novoTipo){ const nm = (f.novoNome || document.getElementById("at-novo")?.value || "").trim();
+        if(!nm){ toast("Digite o nome da nova atividade ou escolha uma da lista."); return; }
+        f.tipo = criarTipoAtiv(nm); f.novoTipo = false; f.novoNome = ""; }
       if(!f.tipo){ toast("Escolha a atividade."); return; }
       if(!f.dia){ toast("Escolha a data."); return; }
       if(m<=0){ toast("Informe a duração."); return; }
